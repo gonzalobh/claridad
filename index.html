@@ -270,7 +270,7 @@
       width: min(720px, 100%);
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: 22px;
       padding: 24px 0 36px;
     }
 
@@ -292,13 +292,13 @@
 
     .insight-block {
       text-align: left;
-      padding: 26px 22px;
+      padding: 32px 22px;
       display: flex;
       flex-direction: column;
       gap: 14px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
+      border-left: 5px solid var(--accent);
       border-radius: 16px;
       opacity: 0;
       transform: translateY(8px);
@@ -331,7 +331,7 @@
     }
 
     .insight-text {
-      font-size: 32px;
+      font-size: 36px;
       font-weight: 650;
       color: var(--text-primary);
       line-height: 1.25;
@@ -345,6 +345,32 @@
       line-height: 1.6;
       max-width: 520px;
       margin: 0;
+      opacity: 0.7;
+    }
+
+    .verdict-block {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 14px 18px;
+      border-left: 2px solid var(--accent);
+      background: transparent;
+      margin-top: 12px;
+    }
+
+    .verdict-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .verdict-body {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-secondary);
     }
 
     .reasoning-toggle {
@@ -445,6 +471,7 @@
       letter-spacing: 0.14em;
       font-weight: 600;
       color: var(--text-secondary);
+      margin-top: -6px;
     }
 
     .dashboard-card {
@@ -526,6 +553,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      margin-top: -6px;
     }
 
     .summary-block {
@@ -578,6 +606,7 @@
       border-color: var(--accent);
       background: var(--surface-strong);
       border-left: 3px solid var(--accent);
+      padding: 18px 20px;
     }
 
     .option-card.is-recommended::before {
@@ -618,6 +647,10 @@
       letter-spacing: 0.01em;
     }
 
+    .option-card.is-recommended .option-title {
+      font-weight: 700;
+    }
+
     .option-tag {
       padding: 4px 10px;
       border-radius: 999px;
@@ -633,6 +666,10 @@
     .option-card.is-recommended .option-tag {
       border-color: var(--accent);
       color: var(--accent);
+    }
+
+    .option-card:not(.is-recommended) {
+      opacity: 0.82;
     }
 
     .option-tradeoff {
@@ -823,7 +860,7 @@
       }
 
       .insight-text {
-        font-size: 26px;
+        font-size: 29px;
       }
 
       textarea {
@@ -852,6 +889,7 @@
     .response-shell.is-loading .analysis-panel,
     .response-shell.is-loading .options-title,
     .response-shell.is-loading .options-list,
+    .response-shell.is-loading .verdict-block,
     .response-shell.is-loading .reasoning-toggle {
       display: none;
     }
@@ -1406,7 +1444,7 @@
               block.className = "summary-block";
               const title = document.createElement("div");
               title.className = "summary-title";
-              title.textContent = "Marco recomendado";
+              title.textContent = "Marco estratégico";
               const body = document.createElement("div");
               body.className = "summary-body";
               const list = document.createElement("ul");
@@ -1764,6 +1802,20 @@
     insightBlock.appendChild(insightLabel);
     insightBlock.appendChild(insightTextEl);
     insightBlock.appendChild(insightSubtextEl);
+
+    const verdictBlock = document.createElement("div");
+    verdictBlock.className = "verdict-block";
+
+    const verdictTitle = document.createElement("div");
+    verdictTitle.className = "verdict-title";
+    verdictTitle.textContent = "VEREDICTO";
+
+    const verdictBody = document.createElement("div");
+    verdictBody.className = "verdict-body";
+    verdictBody.textContent = "No decidir ahora mantiene la ambigüedad y aumenta el costo emocional.";
+
+    verdictBlock.appendChild(verdictTitle);
+    verdictBlock.appendChild(verdictBody);
     analysisPanelEl = document.createElement("div");
     analysisPanelEl.className = "analysis-panel";
 
@@ -1776,12 +1828,13 @@
 
     const optionsTitleEl = document.createElement("div");
     optionsTitleEl.className = "options-title";
-    optionsTitleEl.textContent = "Movimientos posibles";
+    optionsTitleEl.textContent = "Decisiones disponibles";
 
     optionsListEl = document.createElement("div");
     optionsListEl.className = "options-list";
 
     assistantShell.appendChild(insightBlock);
+    assistantShell.appendChild(verdictBlock);
     assistantShell.appendChild(loaderDesktopEl);
     assistantShell.appendChild(dashboardEl);
     assistantShell.appendChild(summaryBlocksEl);
