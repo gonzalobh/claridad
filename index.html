@@ -9,12 +9,14 @@
   <style>
     :root {
       --bg: #0B0F14;
-      --surface: #121826;
-      --surface-strong: #161D2D;
+      --surface: #0F141C;
+      --surface-strong: #121826;
       --border: #1F2937;
+
       --text-primary: #E5E7EB;
       --text-secondary: #9CA3AF;
-      --accent: #F59E0B;
+
+      --accent: #1DB954;
     }
 
     body {
@@ -198,19 +200,20 @@
     button {
       padding: 14px 18px;
       border-radius: 12px;
-      border: none;
-      background: var(--text-primary);
-      color: var(--bg);
+      border: 1px solid var(--border);
+      background: var(--surface-strong);
+      color: var(--text-primary);
       cursor: pointer;
       font-size: 15px;
       font-weight: 600;
-      transition: transform 0.15s ease, background 0.2s ease;
+      transition: background 0.2s ease, border-color 0.2s ease;
       box-shadow: none;
     }
 
     button:hover:not(:disabled) {
-      transform: translateY(-1px);
-      background: var(--text-secondary);
+      background: #161D2D;
+      border-color: var(--text-secondary);
+      transform: none;
     }
 
     button:disabled {
@@ -292,13 +295,13 @@
 
     .insight-block {
       text-align: left;
-      padding: 32px 22px;
+      padding: 36px 28px;
       display: flex;
       flex-direction: column;
       gap: 14px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-left: 5px solid var(--accent);
+      border-left: 4px solid var(--accent);
       border-radius: 16px;
       opacity: 0;
       transform: translateY(8px);
@@ -331,10 +334,10 @@
     }
 
     .insight-text {
-      font-size: 36px;
-      font-weight: 650;
+      font-size: 28px;
+      font-weight: 600;
       color: var(--text-primary);
-      line-height: 1.25;
+      line-height: 1.3;
       max-width: 560px;
       margin: 0;
     }
@@ -476,12 +479,12 @@
 
     .dashboard-card {
       border: 1px solid var(--border);
-      border-radius: 18px;
+      border-radius: 14px;
       padding: 18px 20px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      background: var(--surface);
+      background: #0E131B;
     }
 
     .dashboard-title {
@@ -534,7 +537,7 @@
     }
 
     .dot.is-active {
-      background: var(--text-secondary);
+      background: #6B7280;
       opacity: 1;
     }
 
