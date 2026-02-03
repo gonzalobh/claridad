@@ -1262,44 +1262,86 @@
     return "";
   }
 
-  function deriveGainsLosses(optionText, label) {
-    const fallback = {
-      A: {
-        gains: ["Bajas tensión hoy", "Ganas tiempo"],
-        losses: ["Pierdes control"]
-      },
-      B: {
-        gains: ["Recuperas marco", "Alineas expectativas"],
-        losses: ["Aceptas fricción"]
-      },
-      C: {
-        gains: ["Cortas ambigüedad", "Fijas límites"],
-        losses: ["Escalas conflicto"]
-      }
-    };
-    if (!optionText) return fallback[label] || fallback.A;
-    const sentences = optionText
+  function deriveGainsLosses(optionText, label, context) {
+    if (!optionText) return { gains: [], losses: [] };
+    const cleaned = optionText
+      .replace(/\r\n/g, "\n")
+      .replace(/^opci[oó]n\s*[A-C]\s*[:\-–—]\s*/i, "")
+      .trim();
+    if (!cleaned) return { gains: [], losses: [] };
+
+    const contextTokens = (context || "")
+      .toLowerCase()
+      .split(/\s+/)
+      .map(token => token.trim())
+      .filter(token => token.length > 2);
+
+    const sentences = cleaned
       .split(/(?<=[.!?])\s+/)
       .map(sentence => sentence.trim())
       .filter(Boolean);
-    const gains = sentences.filter(sentence =>
-      /permite|logras|ayuda|mantiene|protege|abre|recupera|alineas|gana/i.test(sentence)
-    );
-    const losses = sentences.filter(sentence =>
-      /pero|riesgo|puede|sin embargo|costo|coste|sacrific|expon/i.test(sentence)
-    );
-    const result = {
+
+    const contextSentences = [];
+    const otherSentences = [];
+    sentences.forEach(sentence => {
+      const lower = sentence.toLowerCase();
+      if (contextTokens.length && contextTokens.some(token => lower.includes(token))) {
+        contextSentences.push(sentence);
+      } else {
+        otherSentences.push(sentence);
+      }
+    });
+
+    const orderedSentences = contextSentences.concat(otherSentences);
+    const gains = [];
+    const losses = [];
+    const seen = new Set();
+
+    const cleanClause = clause => clause
+      .replace(/^[,;:\-–—\s]+/, "")
+      .replace(/\b(y|adem[aá]s|pero|aunque|sin embargo|no obstante|aun as[ií]|a cambio de|a costa de)\b/i, "")
+      .replace(/[.,;:\s]+$/g, "")
+      .trim();
+
+    const pushUnique = (arr, clause) => {
+      const trimmed = cleanClause(clause);
+      if (!trimmed) return;
+      const key = trimmed.toLowerCase();
+      if (seen.has(key)) return;
+      seen.add(key);
+      arr.push(trimmed);
+    };
+
+    const contrastRegex = /\b(pero|aunque|sin embargo|no obstante|aun as[ií]|a cambio de|a costa de|con el riesgo de)\b/i;
+    const gainSignals = /\b(permite|logras|ayuda|mantiene|protege|abre|recupera|aclara|ordena|cuida|prioriza|facilita|asegura|fortalece|defiende|evita)\b/i;
+    const lossSignals = /\b(riesgo|coste|costo|sacrific|expon|fricci[oó]n|conflicto|tensi[oó]n|ambig[uü]edad|incertidumbre|demora|espera|renuncia|cede|ceder|p[ií]erde|perder)\b/i;
+
+    orderedSentences.forEach(sentence => {
+      const contrastMatch = sentence.match(contrastRegex);
+      if (contrastMatch) {
+        const before = sentence.slice(0, contrastMatch.index).trim();
+        const after = sentence.slice(contrastMatch.index + contrastMatch[0].length).trim();
+        if (before) pushUnique(gains, before);
+        if (after) pushUnique(losses, after);
+        return;
+      }
+      if (gainSignals.test(sentence)) {
+        pushUnique(gains, sentence);
+      }
+      if (lossSignals.test(sentence)) {
+        pushUnique(losses, sentence);
+      }
+    });
+
+    if (!gains.length && orderedSentences.length) {
+      const firstClause = orderedSentences[0].split(/[;:]/)[0];
+      pushUnique(gains, firstClause);
+    }
+
+    return {
       gains: gains.slice(0, 2),
       losses: losses.slice(0, 1)
     };
-    const fallbackData = fallback[label] || fallback.A;
-    while (result.gains.length < 2) {
-      result.gains.push(fallbackData.gains[result.gains.length]);
-    }
-    if (result.losses.length < 1) {
-      result.losses.push(fallbackData.losses[0]);
-    }
-    return result;
   }
 
   function buildOptionDynamicLine(optionText) {
@@ -1467,7 +1509,7 @@
 
         const tradeoffGrid = document.createElement("div");
         tradeoffGrid.className = "tradeoff-grid";
-        const derivedTradeoff = deriveGainsLosses(option.text, option.label);
+        const derivedTradeoff = deriveGainsLosses(option.text, option.label, resolvedContext);
 
         const gainsCol = document.createElement("div");
         gainsCol.className = "tradeoff-col";
