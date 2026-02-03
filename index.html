@@ -142,21 +142,6 @@
       padding: 14px;
     }
 
-    .profile-row.is-collapsed {
-      display: none;
-    }
-
-    .advanced-toggle {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 0;
-      cursor: pointer;
-      text-align: left;
-    }
-
     .profile-label {
       font-size: 12px;
       font-weight: 600;
@@ -913,8 +898,7 @@
     <section class="column column-input">
       <div class="column-header">Describe la situación</div>
       <form class="input-container" id="form">
-        <button type="button" class="advanced-toggle" id="advancedToggle">Ajustes avanzados (opcional)</button>
-        <div class="input-row profile-row is-collapsed" id="profileRow">
+        <div class="input-row profile-row" id="profileRow">
           <label for="genderSelect" class="profile-label">👤 Perfil de la persona (opcional)</label>
           <select id="genderSelect">
             <option value="">Género: No especificar</option>
@@ -956,8 +940,6 @@
   const resetBtn = document.getElementById("resetBtn");
   const submitButton = form.querySelector("button[type='submit']");
   const columnInput = document.querySelector(".column-input");
-  const advancedToggle = document.getElementById("advancedToggle");
-  const profileRow = document.getElementById("profileRow");
   const genderSelect = document.getElementById("genderSelect");
   const ageSelect = document.getElementById("ageSelect");
   const loaderMobile = document.getElementById("loaderMobile");
@@ -1730,10 +1712,6 @@
     }
   }
 
-  advancedToggle.addEventListener("click", () => {
-    profileRow.classList.toggle("is-collapsed");
-  });
-
   if (columnInput) {
     columnInput.addEventListener("transitionend", (event) => {
       if (event.propertyName !== "max-height") return;
@@ -1923,7 +1901,6 @@
     }
     genderSelect.value = "";
     ageSelect.value = "";
-    profileRow.classList.add("is-collapsed");
     if (workspaceEl) {
       workspaceEl.classList.remove("is-analysis");
     }
