@@ -847,11 +847,348 @@
     .response-shell.is-loading .dashboard-card,
     .response-shell.is-loading .summary-blocks,
     .response-shell.is-loading .analysis-panel,
+    .response-shell.is-loading .compare-controls,
+    .response-shell.is-loading .compare-card,
+    .response-shell.is-loading .trust-row,
     .response-shell.is-loading .options-title,
     .response-shell.is-loading .options-list,
     .response-shell.is-loading .verdict-block,
     .response-shell.is-loading .reasoning-toggle {
       display: none;
+    }
+
+    .dashboard-mode {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .pill-toggle-group {
+      display: inline-flex;
+      gap: 6px;
+    }
+
+    .pill-toggle {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0.02em;
+    }
+
+    .pill-toggle.is-active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(29, 185, 84, 0.08);
+    }
+
+    .sim-tag {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .metric-row {
+      cursor: pointer;
+    }
+
+    .metric-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .metric-bar-fill {
+      height: 100%;
+      background: var(--text-secondary);
+      border-radius: 999px;
+      transition: width 0.2s ease, background 0.2s ease;
+    }
+
+    .metric-bar-fill[data-level="4"],
+    .metric-bar-fill[data-level="5"] {
+      background: var(--accent);
+    }
+
+    .metric-indicator input[type="range"] {
+      width: 120px;
+      accent-color: var(--accent);
+    }
+
+    .metric-explain {
+      border-left: 2px solid var(--border);
+      padding: 0 0 0 12px;
+      margin-top: -6px;
+      margin-bottom: 6px;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .metric-explain.is-open {
+      max-height: 200px;
+      opacity: 1;
+    }
+
+    .metric-explain ul {
+      margin: 0;
+      padding-left: 16px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .metric-signal {
+      font-size: 11px;
+      color: var(--text-secondary);
+      opacity: 0.9;
+    }
+
+    .compare-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      color: var(--text-secondary);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .compare-label {
+      font-weight: 600;
+    }
+
+    .compare-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      color: var(--text-primary);
+    }
+
+    .compare-item input {
+      accent-color: var(--accent);
+    }
+
+    .compare-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: var(--surface);
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .compare-table th,
+    .compare-table td {
+      text-align: left;
+      padding: 8px 6px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .compare-table th {
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .compare-table ul {
+      margin: 0;
+      padding-left: 16px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .exec-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: var(--bg);
+    }
+
+    .exec-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .exec-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .exec-button {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface-strong);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .premortem {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+    }
+
+    .premortem-toggle {
+      padding: 0;
+      border: none;
+      background: none;
+      color: var(--text-secondary);
+      font-size: 12px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .premortem-body {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      display: grid;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .premortem-body.is-open {
+      max-height: 240px;
+      opacity: 1;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 15, 20, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 10;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      width: min(560px, 100%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .modal-header {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .modal textarea {
+      width: 100%;
+      min-height: 220px;
+      background: var(--bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+      resize: none;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: -6px;
+    }
+
+    .trust-pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: var(--bg);
+    }
+
+    .option-card.is-recommended {
+      box-shadow: 0 10px 24px rgba(29, 185, 84, 0.14);
+    }
+
+    .option-card.option-animate {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.45s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .option-card.is-recommended:hover {
+        transform: translateY(-2px);
+      }
     }
   </style>
 </head>
@@ -914,6 +1251,18 @@
   let summaryBlocksEl = null;
   let dashboardEl = null;
   let lastUserText = "";
+  let lastAnalysisText = "";
+  let lastOptionTexts = [];
+  let trustRowEl = null;
+  let compareControlsEl = null;
+  let compareCardEl = null;
+  let compareState = { selected: [], options: [] };
+  let dashboardState = { mode: "auto", autoMetrics: null, activeMetrics: null };
+  let modalBackdropEl = null;
+  let modalTitleEl = null;
+  let modalTextareaEl = null;
+  let modalCopyBtn = null;
+  let modalCloseBtn = null;
 
   const WELCOME = "";
 
@@ -1162,7 +1511,137 @@
     };
   }
 
-  function buildDecisionDashboard(metrics, context = "General") {
+  function computeConfidence(metrics) {
+    if (!metrics) return 70;
+    const control = clampMetric(6 - metrics.risk);
+    const clarity = clampMetric(6 - metrics.ambiguity);
+    const urgencyFactor = metrics.urgency >= 4 ? 1.05 : 0.95;
+    const base = (control * 12) + (clarity * 12) + (metrics.inactionCost * 6);
+    const raw = Math.round((base / 5) * urgencyFactor);
+    return Math.min(92, Math.max(58, raw));
+  }
+
+  function detectFramework(analysisText, context) {
+    const normalized = (analysisText || "").toLowerCase();
+    if (context === "Negociación") return "Negociación Harvard";
+    if (/urgente|inmediato|ahora|ya\b/.test(normalized)) return "Eisenhower";
+    if (/trade-?off|compensar|equilibrar|tensi[oó]n|riesgo.*beneficio/.test(normalized)) {
+      return "Teoría de juegos";
+    }
+    if (/pareto|80\/20/.test(normalized)) return "Pareto";
+    return "Principios de claridad operativa";
+  }
+
+  function explainMetric(metricKey, analysisText, optionTexts, metrics) {
+    const level = metrics?.[metricKey] ?? 3;
+    const normalized = `${analysisText || ""}\n${(optionTexts || []).join("\n")}`.toLowerCase();
+    const keywordMap = {
+      risk: ["riesgo", "pérdida", "exposición", "consecuencia", "grave", "crítico"],
+      urgency: ["urgente", "inmediato", "ahora", "ya", "plazo", "deadline"],
+      ambiguity: ["ambigü", "incierto", "no claro", "difuso", "interpretación"],
+      inactionCost: ["costo", "coste", "pérdida", "oportunidad", "consecuencia", "dejar pasar"]
+    };
+    const hits = (keywordMap[metricKey] || []).filter(word => normalized.includes(word));
+    const levelBand = level >= 4 ? "alta" : level <= 2 ? "baja" : "media";
+    const signalMap = {
+      risk: "Define límites explícitos y documenta acuerdos para reducir exposición.",
+      urgency: "Pide fecha clara y un siguiente paso concreto para ajustar urgencia.",
+      ambiguity: "Alinea definiciones clave y confirma por escrito para reducir ambigüedad.",
+      inactionCost: "Estima costo de oportunidad y comunica impacto si no se actúa."
+    };
+    const bullets = [];
+    if (level >= 4) {
+      bullets.push(`Se detectan señales de ${hits[0] || "exposición"} en el análisis.`);
+      bullets.push("El impacto potencial afecta control y reputación del movimiento.");
+    } else if (level <= 2) {
+      bullets.push("La situación luce contenida y con margen de maniobra.");
+      bullets.push("Hay elementos que permiten sostener el ritmo sin presión excesiva.");
+    } else {
+      bullets.push("Existen señales mixtas que requieren monitoreo cercano.");
+      bullets.push("El balance actual sugiere actuar con cautela y claridad.");
+    }
+    return {
+      bullets,
+      signal: signalMap[metricKey] || "Clarifica el siguiente paso para ajustar el nivel."
+    };
+  }
+
+  function scoreOptionHeuristics(optionBodyText, metrics) {
+    const text = (optionBodyText || "").toLowerCase();
+    const scores = {
+      risk: clampMetric(metrics?.risk ?? 3),
+      time: 3,
+      control: clampMetric(6 - (metrics?.risk ?? 3)),
+      benefit: 3
+    };
+    if (/inmediato|ahora|ya\b|urgente/.test(text)) scores.time = 5;
+    if (/esperar|pausar|diferir|posponer/.test(text)) scores.time = 2;
+    if (/reuni[oó]n|llamada|email|documento|definir|l[ií]mite|acuerdo|negociar/.test(text)) {
+      scores.control = clampMetric(scores.control + 1);
+    }
+    if (/arriesg|exponer|ultim[aá]tum|conflicto/.test(text)) {
+      scores.risk = clampMetric(scores.risk + 1);
+    }
+    if (/clarifica|protege|avanza|resolver|asegura|fortalece/.test(text)) {
+      scores.benefit = clampMetric(scores.benefit + 1);
+    }
+    return scores;
+  }
+
+  function generateDeliverable(type, situationText, optionTitle, optionBody, context) {
+    const situation = (situationText || "").trim();
+    const title = optionTitle || "Movimiento";
+    const body = (optionBody || "").trim();
+    if (type === "email") {
+      return [
+        `Asunto: Próximo paso — ${title}`,
+        "",
+        "Hola,",
+        "",
+        "Propongo lo siguiente:",
+        `• ${trimToSentences(body, 1) || "Definir el próximo paso claro."}`,
+        `• ${trimToSentences(situation, 1) || "Alinear el contexto y el objetivo."}`,
+        "• Confirmar un acuerdo mínimo y tiempos.",
+        "",
+        "Quedo atento/a para avanzar.",
+        "",
+        "Gracias,"
+      ].join("\n");
+    }
+    const checklistItems = [
+      `Releer contexto: ${trimToSentences(situation, 1) || "Situación actual"}.`,
+      `Definir objetivo del movimiento (${title}).`,
+      "Redactar mensaje breve con límites y próximos pasos.",
+      "Identificar riesgos clave y mitigaciones.",
+      `Acordar canal y timing (${context || "General"}).`,
+      "Enviar y confirmar recepción."
+    ];
+    return checklistItems.slice(0, 7).map(item => `• ${item}`).join("\n");
+  }
+
+  function generatePremortem(optionBodyText, metrics, context) {
+    const risk = metrics?.risk ?? 3;
+    const urgency = metrics?.urgency ?? 3;
+    const ambiguity = metrics?.ambiguity ?? 3;
+    let worst = "La decisión genera fricción y retrasa el acuerdo esperado.";
+    if (risk >= 4) {
+      worst = "El movimiento aumenta el conflicto y deja una pérdida difícil de revertir.";
+    }
+    if (ambiguity >= 4) {
+      worst = "La falta de claridad provoca malentendidos y resultados inconsistentes.";
+    }
+    if (urgency >= 4) {
+      worst = "La prisa lleva a un compromiso mal alineado con el objetivo.";
+    }
+    const mitigations = [
+      "Definir límites y criterios de éxito por escrito.",
+      "Validar el acuerdo con la contraparte antes de ejecutar.",
+      `Registrar decisiones clave y responsabilidades (${context || "General"}).`
+    ];
+    return { worst, mitigations };
+  }
+
+  function buildDecisionDashboard(metrics, context = "General", analysisText = "", optionTexts = []) {
     const dashboard = document.createElement("div");
     dashboard.className = "dashboard-card";
 
@@ -1171,6 +1650,39 @@
     title.textContent = "Decision Dashboard";
     dashboard.appendChild(title);
 
+    const modeRow = document.createElement("div");
+    modeRow.className = "dashboard-mode";
+
+    const modeLabel = document.createElement("div");
+    modeLabel.textContent = "Modo:";
+    modeRow.appendChild(modeLabel);
+
+    const toggleWrap = document.createElement("div");
+    toggleWrap.className = "pill-toggle-group";
+
+    const autoBtn = document.createElement("button");
+    autoBtn.type = "button";
+    autoBtn.className = "pill-toggle is-active";
+    autoBtn.textContent = "Auto";
+    autoBtn.dataset.mode = "auto";
+
+    const whatIfBtn = document.createElement("button");
+    whatIfBtn.type = "button";
+    whatIfBtn.className = "pill-toggle";
+    whatIfBtn.textContent = "What-if";
+    whatIfBtn.dataset.mode = "what-if";
+
+    const simTag = document.createElement("span");
+    simTag.className = "sim-tag";
+    simTag.textContent = "Simulación activa";
+    simTag.style.display = "none";
+
+    toggleWrap.appendChild(autoBtn);
+    toggleWrap.appendChild(whatIfBtn);
+    modeRow.appendChild(toggleWrap);
+    modeRow.appendChild(simTag);
+    dashboard.appendChild(modeRow);
+
     const rows = [
       { key: "risk", label: "Riesgo", gender: "m" },
       { key: "urgency", label: "Urgencia", gender: "f" },
@@ -1178,10 +1690,56 @@
       { key: "inactionCost", label: "Costo de no actuar", gender: "m" }
     ];
 
+    if (!dashboardState.autoMetrics) {
+      dashboardState.autoMetrics = { ...metrics };
+    }
+    if (!dashboardState.activeMetrics) {
+      dashboardState.activeMetrics = { ...metrics };
+    }
+
+    const updateRow = (rowEl, level, gender) => {
+      const barFill = rowEl.querySelector(".metric-bar-fill");
+      const levelEl = rowEl.querySelector(".metric-level");
+      const slider = rowEl.querySelector("input[type='range']");
+      if (barFill) {
+        barFill.style.width = `${(level / 5) * 100}%`;
+        barFill.dataset.level = String(level);
+      }
+      if (levelEl) {
+        levelEl.textContent = levelTextFor(gender, level);
+      }
+      if (slider) {
+        slider.value = level;
+      }
+    };
+
+    const setMode = (mode) => {
+      dashboardState.mode = mode;
+      autoBtn.classList.toggle("is-active", mode === "auto");
+      whatIfBtn.classList.toggle("is-active", mode === "what-if");
+      simTag.style.display = mode === "what-if" ? "inline-flex" : "none";
+      const sliders = dashboard.querySelectorAll("input[type='range']");
+      sliders.forEach(slider => {
+        slider.disabled = mode === "auto";
+      });
+      if (mode === "auto" && dashboardState.autoMetrics) {
+        dashboardState.activeMetrics = { ...dashboardState.autoMetrics };
+        rows.forEach(row => {
+          const rowEl = dashboard.querySelector(`.metric-row[data-key='${row.key}']`);
+          if (rowEl) {
+            updateRow(rowEl, dashboardState.activeMetrics[row.key], row.gender);
+          }
+        });
+      }
+      updateTrustRow(dashboardState.activeMetrics || metrics, analysisText, context);
+    };
+
     rows.forEach((row) => {
       const level = metrics[row.key];
       const rowEl = document.createElement("div");
-      rowEl.className = "metric-row";
+      rowEl.className = "metric-row is-clickable";
+      rowEl.dataset.key = row.key;
+      rowEl.tabIndex = 0;
 
       const label = document.createElement("div");
       label.className = "metric-label";
@@ -1190,33 +1748,164 @@
       const indicator = document.createElement("div");
       indicator.className = "metric-indicator";
 
-      const dots = document.createElement("div");
-      dots.className = "dots";
-      for (let i = 1; i <= 5; i += 1) {
-        const dot = document.createElement("span");
-        dot.className = "dot";
-        if (i <= level) {
-          dot.classList.add("is-active");
-          if (level >= 4) {
-            dot.classList.add("is-high");
-          }
-        }
-        dots.appendChild(dot);
-      }
+      const bar = document.createElement("div");
+      bar.className = "metric-bar";
+      const barFill = document.createElement("div");
+      barFill.className = "metric-bar-fill";
+      bar.appendChild(barFill);
+
+      const slider = document.createElement("input");
+      slider.type = "range";
+      slider.min = 1;
+      slider.max = 5;
+      slider.step = 1;
+      slider.value = level;
+      slider.disabled = dashboardState.mode === "auto";
 
       const levelEl = document.createElement("div");
       levelEl.className = "metric-level";
       levelEl.textContent = `${levelTextFor(row.gender, level)}`;
 
-      indicator.appendChild(dots);
+      indicator.appendChild(bar);
+      indicator.appendChild(slider);
       indicator.appendChild(levelEl);
+
+      const explain = document.createElement("div");
+      explain.className = "metric-explain";
+
+      const renderExplain = () => {
+        const details = explainMetric(row.key, analysisText, optionTexts, dashboardState.activeMetrics || metrics);
+        explain.innerHTML = "";
+        const bullets = document.createElement("ul");
+        details.bullets.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          bullets.appendChild(li);
+        });
+        const signal = document.createElement("div");
+        signal.className = "metric-signal";
+        signal.textContent = details.signal;
+        explain.appendChild(bullets);
+        explain.appendChild(signal);
+      };
+
+      rowEl.addEventListener("click", () => {
+        renderExplain();
+        explain.classList.toggle("is-open");
+      });
+      rowEl.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          rowEl.click();
+        }
+      });
+
+      slider.addEventListener("input", (event) => {
+        if (dashboardState.mode !== "what-if") return;
+        const value = parseInt(event.target.value, 10);
+        if (!dashboardState.activeMetrics) {
+          dashboardState.activeMetrics = { ...metrics };
+        }
+        dashboardState.activeMetrics[row.key] = clampMetric(value);
+        updateRow(rowEl, dashboardState.activeMetrics[row.key], row.gender);
+        updateTrustRow(dashboardState.activeMetrics, analysisText, context);
+        if (compareState.render) {
+          compareState.render();
+        }
+      });
+      slider.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
+
+      updateRow(rowEl, level, row.gender);
 
       rowEl.appendChild(label);
       rowEl.appendChild(indicator);
       dashboard.appendChild(rowEl);
+      dashboard.appendChild(explain);
     });
 
+    autoBtn.addEventListener("click", () => setMode("auto"));
+    whatIfBtn.addEventListener("click", () => setMode("what-if"));
+
+    setMode(dashboardState.mode || "auto");
     return dashboard;
+  }
+
+  function createTrustRow() {
+    const row = document.createElement("div");
+    row.className = "trust-row";
+    const confidence = document.createElement("div");
+    confidence.className = "trust-pill";
+    confidence.textContent = "Confianza: 70%";
+    const framework = document.createElement("div");
+    framework.className = "trust-pill";
+    framework.textContent = "Marco: Principios de claridad operativa";
+    row.appendChild(confidence);
+    row.appendChild(framework);
+    return { row, confidence, framework };
+  }
+
+  function updateTrustRow(metrics, analysisText, context) {
+    if (!trustRowEl) return;
+    const confidenceEl = trustRowEl.querySelector(".trust-pill");
+    const frameworkEl = trustRowEl.querySelectorAll(".trust-pill")[1];
+    if (confidenceEl) {
+      const confidence = computeConfidence(metrics);
+      confidenceEl.textContent = `Confianza: ${confidence}%`;
+    }
+    if (frameworkEl) {
+      frameworkEl.textContent = `Marco: ${detectFramework(analysisText, context)}`;
+    }
+  }
+
+  function ensureModal() {
+    if (modalBackdropEl) return;
+    modalBackdropEl = document.createElement("div");
+    modalBackdropEl.className = "modal-backdrop";
+    modalBackdropEl.innerHTML = `
+      <div class="modal" role="dialog" aria-modal="true">
+        <div class="modal-header"></div>
+        <textarea readonly></textarea>
+        <div class="modal-actions">
+          <button type="button" class="modal-copy">Copiar</button>
+          <button type="button" class="modal-close">Cerrar</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modalBackdropEl);
+    modalTitleEl = modalBackdropEl.querySelector(".modal-header");
+    modalTextareaEl = modalBackdropEl.querySelector("textarea");
+    modalCopyBtn = modalBackdropEl.querySelector(".modal-copy");
+    modalCloseBtn = modalBackdropEl.querySelector(".modal-close");
+
+    modalBackdropEl.addEventListener("click", (event) => {
+      if (event.target === modalBackdropEl) {
+        closeModal();
+      }
+    });
+    modalCloseBtn.addEventListener("click", closeModal);
+    modalCopyBtn.addEventListener("click", async () => {
+      if (!modalTextareaEl) return;
+      try {
+        await navigator.clipboard.writeText(modalTextareaEl.value);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  }
+
+  function openModal(title, content) {
+    ensureModal();
+    if (modalTitleEl) modalTitleEl.textContent = title;
+    if (modalTextareaEl) modalTextareaEl.value = content;
+    if (modalBackdropEl) modalBackdropEl.classList.add("is-open");
+  }
+
+  function closeModal() {
+    if (modalBackdropEl) {
+      modalBackdropEl.classList.remove("is-open");
+    }
   }
 
   function extractSubInsight(analysisText, context) {
@@ -1415,6 +2104,8 @@
   function addAssistantResponse(analysisText, options, recommendation, detectedContext) {
     try {
       const resolvedContext = detectedContext || "General";
+      lastAnalysisText = analysisText || "";
+      lastOptionTexts = (options || []).map(option => option.text);
       if (insightTextEl) {
         insightTextEl.textContent = extractAppleInsight(analysisText || "");
       }
@@ -1426,9 +2117,17 @@
       }
       if (dashboardEl) {
         const metrics = deriveMetricsFromAnalysis(analysisText || "");
-        const nextDashboard = buildDecisionDashboard(metrics, resolvedContext);
+        dashboardState.autoMetrics = { ...metrics };
+        dashboardState.activeMetrics = { ...metrics };
+        dashboardState.mode = "auto";
+        const nextDashboard = buildDecisionDashboard(metrics, resolvedContext, analysisText || "", lastOptionTexts);
         dashboardEl.replaceWith(nextDashboard);
         dashboardEl = nextDashboard;
+        dashboardEl.style.display = analysisText ? "flex" : "none";
+        updateTrustRow(metrics, analysisText || "", resolvedContext);
+      }
+      if (trustRowEl) {
+        trustRowEl.style.display = analysisText ? "flex" : "none";
       }
       if (summaryBlocksEl) {
         summaryBlocksEl.innerHTML = "";
@@ -1498,6 +2197,7 @@
       }
 
       if (!optionsListEl) return;
+      const hasAnalysis = Boolean(analysisText);
       optionsListEl.innerHTML = "";
       const optionOrder = ["B", "A", "C"];
       const normalizedRecommendation = recommendation && ["A", "B", "C"].includes(recommendation)
@@ -1509,6 +2209,126 @@
       const displayOptions = resolvedOrder
         .map(label => options.find(option => option.label === label))
         .filter(Boolean);
+      compareState.selected = [];
+      compareState.options = displayOptions.map((option, index) => {
+        const { title: dynamicTitle, body: optionBodyText } = extractOptionTitleAndBody(option.text);
+        return {
+          id: `option-${index + 1}`,
+          label: option.label,
+          displayIndex: index + 1,
+          title: dynamicTitle,
+          body: optionBodyText
+        };
+      });
+
+      if (compareControlsEl) {
+        compareControlsEl.innerHTML = "";
+        compareControlsEl.style.display = hasAnalysis ? "flex" : "none";
+        if (hasAnalysis) {
+          const compareLabel = document.createElement("div");
+          compareLabel.className = "compare-label";
+          compareLabel.textContent = "Comparar:";
+          compareControlsEl.appendChild(compareLabel);
+
+          compareState.options.forEach(option => {
+            const compareItem = document.createElement("label");
+            compareItem.className = "compare-item";
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = option.id;
+            const span = document.createElement("span");
+            span.textContent = `Opción ${option.displayIndex}`;
+            compareItem.appendChild(checkbox);
+            compareItem.appendChild(span);
+            compareControlsEl.appendChild(compareItem);
+
+            checkbox.addEventListener("change", () => {
+              if (checkbox.checked && compareState.selected.length >= 2) {
+                checkbox.checked = false;
+                return;
+              }
+              if (checkbox.checked) {
+                compareState.selected.push(option.id);
+              } else {
+                compareState.selected = compareState.selected.filter(id => id !== option.id);
+              }
+              renderCompareTable();
+            });
+          });
+        }
+      }
+      if (compareCardEl) {
+        compareCardEl.innerHTML = "";
+        compareCardEl.style.display = "none";
+      }
+
+      const renderCompareTable = () => {
+        if (!compareCardEl) return;
+        if (compareState.selected.length !== 2) {
+          compareCardEl.style.display = "none";
+          compareCardEl.innerHTML = "";
+          return;
+        }
+        const selectedOptions = compareState.options.filter(option =>
+          compareState.selected.includes(option.id)
+        );
+        compareCardEl.innerHTML = "";
+        compareCardEl.style.display = "block";
+        const table = document.createElement("table");
+        table.className = "compare-table";
+        const thead = document.createElement("thead");
+        const headRow = document.createElement("tr");
+        headRow.innerHTML = `
+          <th></th>
+          <th>Opción ${selectedOptions[0].displayIndex}</th>
+          <th>Opción ${selectedOptions[1].displayIndex}</th>
+        `;
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+        const buildRow = (label, leftContent, rightContent) => {
+          const tr = document.createElement("tr");
+          const th = document.createElement("th");
+          th.textContent = label;
+          const tdLeft = document.createElement("td");
+          tdLeft.appendChild(leftContent);
+          const tdRight = document.createElement("td");
+          tdRight.appendChild(rightContent);
+          tr.appendChild(th);
+          tr.appendChild(tdLeft);
+          tr.appendChild(tdRight);
+          return tr;
+        };
+
+        const buildList = (items) => {
+          const ul = document.createElement("ul");
+          items.forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            ul.appendChild(li);
+          });
+          return ul;
+        };
+
+        const leftTradeoff = deriveGainsLosses(selectedOptions[0].body, selectedOptions[0].label, resolvedContext);
+        const rightTradeoff = deriveGainsLosses(selectedOptions[1].body, selectedOptions[1].label, resolvedContext);
+
+        const leftScores = scoreOptionHeuristics(selectedOptions[0].body, dashboardState.activeMetrics);
+        const rightScores = scoreOptionHeuristics(selectedOptions[1].body, dashboardState.activeMetrics);
+
+        tbody.appendChild(buildRow("Movimiento", document.createTextNode(selectedOptions[0].title), document.createTextNode(selectedOptions[1].title)));
+        tbody.appendChild(buildRow("Ganas", buildList(leftTradeoff.gains.slice(0, 2)), buildList(rightTradeoff.gains.slice(0, 2))));
+        tbody.appendChild(buildRow("Pierdes", buildList(leftTradeoff.losses.slice(0, 1)), buildList(rightTradeoff.losses.slice(0, 1))));
+        tbody.appendChild(buildRow("Riesgo estimado", document.createTextNode(levelText(leftScores.risk)), document.createTextNode(levelText(rightScores.risk))));
+        tbody.appendChild(buildRow("Tiempo", document.createTextNode(levelText(leftScores.time)), document.createTextNode(levelText(rightScores.time))));
+        tbody.appendChild(buildRow("Control", document.createTextNode(levelText(leftScores.control)), document.createTextNode(levelText(rightScores.control))));
+
+        table.appendChild(tbody);
+        compareCardEl.appendChild(table);
+      };
+      compareState.render = renderCompareTable;
+
       displayOptions.forEach((option, index) => {
         const { title: dynamicTitle, body: optionBodyText } = extractOptionTitleAndBody(option.text);
         const displayIndex = index + 1;
@@ -1592,6 +2412,66 @@
         const body = document.createElement("div");
         body.className = "option-body";
 
+        if (hasAnalysis) {
+          const execRow = document.createElement("div");
+          execRow.className = "exec-row";
+          const execTitle = document.createElement("div");
+          execTitle.className = "exec-title";
+          execTitle.textContent = "Ejecutar";
+          const execButtons = document.createElement("div");
+          execButtons.className = "exec-buttons";
+          const emailBtn = document.createElement("button");
+          emailBtn.type = "button";
+          emailBtn.className = "exec-button";
+          emailBtn.textContent = "Borrador de email";
+          const checklistBtn = document.createElement("button");
+          checklistBtn.type = "button";
+          checklistBtn.className = "exec-button";
+          checklistBtn.textContent = "Checklist 10 min";
+          execButtons.appendChild(emailBtn);
+          execButtons.appendChild(checklistBtn);
+          execRow.appendChild(execTitle);
+          execRow.appendChild(execButtons);
+          body.appendChild(execRow);
+
+          emailBtn.addEventListener("click", () => {
+            const content = generateDeliverable("email", lastUserText, dynamicTitle, optionBodyText, resolvedContext);
+            openModal(`Borrador de email — Opción ${displayIndex}`, content);
+          });
+          checklistBtn.addEventListener("click", () => {
+            const content = generateDeliverable("checklist", lastUserText, dynamicTitle, optionBodyText, resolvedContext);
+            openModal(`Checklist 10 min — Opción ${displayIndex}`, content);
+          });
+
+          const premortem = document.createElement("div");
+          premortem.className = "premortem";
+          const premortemToggle = document.createElement("button");
+          premortemToggle.type = "button";
+          premortemToggle.className = "premortem-toggle";
+          premortemToggle.textContent = "Pre-mortem: lo peor que podría pasar";
+          const premortemBody = document.createElement("div");
+          premortemBody.className = "premortem-body";
+          const premortemData = generatePremortem(optionBodyText, dashboardState.activeMetrics, resolvedContext);
+          premortemBody.innerHTML = `
+            <div><strong>Peor caso:</strong> ${premortemData.worst}</div>
+            <div><strong>Mitigación:</strong></div>
+          `;
+          const mitigationList = document.createElement("ul");
+          premortemData.mitigations.forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            mitigationList.appendChild(li);
+          });
+          premortemBody.appendChild(mitigationList);
+          premortem.appendChild(premortemToggle);
+          premortem.appendChild(premortemBody);
+          body.appendChild(premortem);
+
+          premortemToggle.addEventListener("click", () => {
+            premortemBody.classList.toggle("is-open");
+          });
+        }
+
         const copyButton = document.createElement("button");
         copyButton.type = "button";
         copyButton.className = "copy-button";
@@ -1631,8 +2511,11 @@
         card.appendChild(tradeoff);
         card.appendChild(tradeoffGrid);
         card.appendChild(body);
+        card.classList.add("option-animate");
+        card.style.animationDelay = `${index * 60}ms`;
         optionsListEl.appendChild(card);
       });
+      renderCompareTable();
       messagesEl.scrollTop = messagesEl.scrollHeight;
     } catch (error) {
       console.error(error);
@@ -1797,6 +2680,11 @@
 
     verdictBlock.appendChild(verdictTitle);
     verdictBlock.appendChild(verdictBody);
+
+    const trustRow = createTrustRow();
+    trustRowEl = trustRow.row;
+    trustRowEl.style.display = "none";
+
     analysisPanelEl = document.createElement("div");
     analysisPanelEl.className = "analysis-panel";
 
@@ -1811,15 +2699,25 @@
     optionsTitleEl.className = "options-title";
     optionsTitleEl.textContent = "Decisiones disponibles";
 
+    compareControlsEl = document.createElement("div");
+    compareControlsEl.className = "compare-controls";
+
+    compareCardEl = document.createElement("div");
+    compareCardEl.className = "compare-card";
+    compareCardEl.style.display = "none";
+
     optionsListEl = document.createElement("div");
     optionsListEl.className = "options-list";
 
     assistantShell.appendChild(insightBlock);
     assistantShell.appendChild(verdictBlock);
+    assistantShell.appendChild(trustRowEl);
     assistantShell.appendChild(loaderDesktopEl);
     assistantShell.appendChild(dashboardEl);
     assistantShell.appendChild(summaryBlocksEl);
     assistantShell.appendChild(optionsTitleEl);
+    assistantShell.appendChild(compareControlsEl);
+    assistantShell.appendChild(compareCardEl);
     assistantShell.appendChild(optionsListEl);
     assistantShell.appendChild(reasoningToggleEl);
     assistantShell.appendChild(analysisPanelEl);
@@ -1896,6 +2794,11 @@
   resetBtn.onclick = () => {
     messages = [];
     messagesEl.innerHTML = "";
+    compareState = { selected: [], options: [] };
+    dashboardState = { mode: "auto", autoMetrics: null, activeMetrics: null };
+    lastAnalysisText = "";
+    lastOptionTexts = [];
+    closeModal();
     if (WELCOME) {
       addMessage("assistant", WELCOME);
     }
