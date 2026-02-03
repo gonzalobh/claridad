@@ -478,6 +478,23 @@
       gap: 14px;
     }
 
+    .dashboard-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .dashboard-grid .option-card {
+      width: 100%;
+      max-width: 880px;
+    }
+
+    .dashboard-grid .option-card.is-recommended {
+      grid-column: auto;
+      transform: none;
+    }
+
     .options-title {
       font-size: 12px;
       text-transform: uppercase;
@@ -613,6 +630,29 @@
 
     .option-card:hover {
       border-color: var(--text-secondary);
+    }
+
+    .option-card.is-sim-best {
+      border-color: var(--accent);
+      box-shadow: 0 10px 22px rgba(31, 198, 255, 0.18);
+    }
+
+    .option-sim-score {
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .option-sim-score span {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-transform: none;
+      letter-spacing: 0.01em;
     }
 
     .option-card.is-recommended {
@@ -1219,6 +1259,71 @@
       font-size: 12px;
       color: var(--text-secondary);
       background: var(--bg);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-item {
+      position: relative;
+      cursor: help;
+    }
+
+    .meta-info {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--text-secondary);
+      background: var(--surface);
+    }
+
+    .meta-item::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 0;
+      bottom: calc(100% + 10px);
+      width: max-content;
+      max-width: 240px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: var(--surface-strong);
+      color: var(--text-primary);
+      font-size: 11px;
+      line-height: 1.4;
+      box-shadow: 0 10px 24px rgba(15, 20, 28, 0.55);
+      opacity: 0;
+      transform: translateY(4px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 3;
+    }
+
+    .meta-item::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      bottom: calc(100% + 4px);
+      border-width: 6px 6px 0 6px;
+      border-style: solid;
+      border-color: var(--surface-strong) transparent transparent transparent;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .meta-item:hover::after,
+    .meta-item:focus-within::after,
+    .meta-item:hover::before,
+    .meta-item:focus-within::before {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .option-card.is-recommended {
@@ -1279,6 +1384,19 @@
       .options-list .option-card.is-recommended {
         grid-column: 2 / span 1;
         transform: translateY(-2px);
+      }
+
+      .dashboard-grid {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dashboard-grid .option-card {
+        height: auto;
+      }
+
+      .dashboard-grid .option-card.is-recommended:hover {
+        transform: none;
       }
 
       .radar-card {
@@ -1671,7 +1789,49 @@
 
   function updateRadar() {
     if (!radarCanvasEl) return;
-    renderRadar(radarCanvasEl, getCurrentMetrics());
+    const radarMetrics = getCurrentMetrics();
+    renderRadar(radarCanvasEl, radarMetrics);
+
+    if (!optionsListEl) return;
+    const cards = Array.from(optionsListEl.querySelectorAll(".option-card"));
+    if (!cards.length) return;
+
+    const weights = dashboardState.activeMetrics || dashboardState.autoMetrics || radarMetrics;
+    const weightValues = {
+      risk: weights?.risk ?? 3,
+      urgency: weights?.urgency ?? 3,
+      ambiguity: weights?.ambiguity ?? 3,
+      inactionCost: weights?.inactionCost ?? 3
+    };
+    const totalWeight = Object.values(weightValues).reduce((sum, value) => sum + value, 0) || 1;
+
+    let bestScore = -Infinity;
+    let bestCard = null;
+
+    cards.forEach((card) => {
+      const optionText = card.dataset.optionText || "";
+      const optionScores = scoreOptionHeuristics(optionText, weights);
+      const weightedSum = (optionScores.risk * weightValues.risk)
+        + (optionScores.time * weightValues.urgency)
+        + (optionScores.control * weightValues.ambiguity)
+        + (optionScores.benefit * weightValues.inactionCost);
+      const weightedAvg = weightedSum / totalWeight;
+      const scoreOutOfTen = (weightedAvg / 5) * 10;
+      const scoreValue = Number.isFinite(scoreOutOfTen) ? scoreOutOfTen : 0;
+      const valueEl = card.querySelector(".option-sim-value");
+      if (valueEl) {
+        valueEl.textContent = `${scoreValue.toFixed(1)}/10`;
+      }
+      card.classList.remove("is-sim-best");
+      if (scoreValue > bestScore) {
+        bestScore = scoreValue;
+        bestCard = card;
+      }
+    });
+
+    if (bestCard) {
+      bestCard.classList.add("is-sim-best");
+    }
   }
 
   function simulateHoverMetrics(optionText, baseMetrics) {
@@ -2112,11 +2272,36 @@
     const row = document.createElement("div");
     row.className = "trust-row";
     const confidence = document.createElement("div");
-    confidence.className = "trust-pill";
-    confidence.textContent = "Confianza: 70%";
+    confidence.className = "trust-pill meta-item";
+    confidence.dataset.tooltip =
+      "Nivel de certeza de la IA basado en la claridad de la información provista.";
+    const confidenceLabel = document.createElement("span");
+    confidenceLabel.textContent = "Confianza";
+    const confidenceInfo = document.createElement("span");
+    confidenceInfo.className = "meta-info";
+    confidenceInfo.textContent = "i";
+    const confidenceValue = document.createElement("span");
+    confidenceValue.className = "meta-value";
+    confidenceValue.textContent = "70%";
+    confidence.appendChild(confidenceLabel);
+    confidence.appendChild(confidenceInfo);
+    confidence.appendChild(confidenceValue);
+
     const framework = document.createElement("div");
-    framework.className = "trust-pill";
-    framework.textContent = "Marco: Principios de claridad operativa";
+    framework.className = "trust-pill meta-item";
+    framework.dataset.tooltip =
+      "Modelo mental utilizado (ej. Costo-Beneficio, Principio de Pareto) para el análisis.";
+    const frameworkLabel = document.createElement("span");
+    frameworkLabel.textContent = "Marco";
+    const frameworkInfo = document.createElement("span");
+    frameworkInfo.className = "meta-info";
+    frameworkInfo.textContent = "i";
+    const frameworkValue = document.createElement("span");
+    frameworkValue.className = "meta-value";
+    frameworkValue.textContent = "Principios de claridad operativa";
+    framework.appendChild(frameworkLabel);
+    framework.appendChild(frameworkInfo);
+    framework.appendChild(frameworkValue);
     row.appendChild(confidence);
     row.appendChild(framework);
     return { row, confidence, framework };
@@ -2128,10 +2313,16 @@
     const frameworkEl = trustRowEl.querySelectorAll(".trust-pill")[1];
     if (confidenceEl) {
       const confidence = computeConfidence(metrics);
-      confidenceEl.textContent = `Confianza: ${confidence}%`;
+      const valueEl = confidenceEl.querySelector(".meta-value");
+      if (valueEl) {
+        valueEl.textContent = `${confidence}%`;
+      }
     }
     if (frameworkEl) {
-      frameworkEl.textContent = `Marco: ${detectFramework(analysisText, context)}`;
+      const valueEl = frameworkEl.querySelector(".meta-value");
+      if (valueEl) {
+        valueEl.textContent = detectFramework(analysisText, context);
+      }
     }
   }
 
@@ -2648,6 +2839,10 @@
           header.appendChild(tag);
         }
 
+        const simScore = document.createElement("div");
+        simScore.className = "option-sim-score";
+        simScore.innerHTML = `Score simulado: <span class="option-sim-value">--/10</span>`;
+
         const tradeoff = document.createElement("div");
         tradeoff.className = "option-tradeoff";
         const tradeoffDynamic = document.createElement("div");
@@ -2793,6 +2988,7 @@
         copyRow.appendChild(copyFeedback);
         body.appendChild(copyRow);
         card.appendChild(header);
+        card.appendChild(simScore);
         card.appendChild(tradeoff);
         card.appendChild(tradeoffGrid);
         card.appendChild(body);
@@ -2998,7 +3194,7 @@
     compareCardEl.style.display = "none";
 
     optionsListEl = document.createElement("div");
-    optionsListEl.className = "options-list";
+    optionsListEl.className = "options-list dashboard-grid";
 
     const commandCenter = document.createElement("div");
     commandCenter.className = "command-center";
