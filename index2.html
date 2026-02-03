@@ -134,35 +134,6 @@
       gap: 12px;
     }
 
-    .profile-row {
-      background: var(--surface-strong);
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      padding: 14px;
-    }
-
-    .profile-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
-
-    select {
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      font-size: 13px;
-      color: var(--text-primary);
-      outline: none;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    select:focus {
-      border-color: var(--text-secondary);
-      box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.12);
-    }
-
     textarea {
       width: 100%;
       padding: 16px 18px;
@@ -868,21 +839,6 @@
     <section class="column column-input">
       <div class="column-header">Describe la situación</div>
       <form class="input-container" id="form">
-        <div class="input-row profile-row" id="profileRow">
-          <label for="genderSelect" class="profile-label">👤 Perfil de la persona (opcional)</label>
-          <select id="genderSelect">
-            <option value="">Género: No especificar</option>
-            <option value="hombre">Género: Masculino</option>
-            <option value="mujer">Género: Femenino</option>
-          </select>
-          <select id="ageSelect">
-            <option value="">Edad: No especificar</option>
-            <option value="18–25">Edad: 18–25</option>
-            <option value="26–35">Edad: 26–35</option>
-            <option value="36–45">Edad: 36–45</option>
-            <option value="45+">Edad: 45+</option>
-          </select>
-        </div>
         <div class="input-row">
           <textarea id="input" rows="2" placeholder="Describe la situación (o pega el texto/email). Sé concreto." autocomplete="off"></textarea>
           <button type="submit">Analizar</button>
@@ -910,8 +866,6 @@
   const resetBtn = document.getElementById("resetBtn");
   const submitButton = form.querySelector("button[type='submit']");
   const columnInput = document.querySelector(".column-input");
-  const genderSelect = document.getElementById("genderSelect");
-  const ageSelect = document.getElementById("ageSelect");
   const loaderMobile = document.getElementById("loaderMobile");
   const closingLine = document.querySelector(".closing-line");
   const workspaceEl = document.querySelector(".workspace");
@@ -1700,20 +1654,9 @@
       columnInput.classList.remove("is-removed");
       columnInput.classList.add("is-hidden");
     }
-    const profileParts = [];
-    if (genderSelect.value) {
-      profileParts.push(genderSelect.value);
-    }
-    if (ageSelect.value) {
-      profileParts.push(ageSelect.value);
-    }
-    const profileLine = profileParts.length ? `[Perfil: ${profileParts.join(", ")}]` : "";
     const payloadLines = [
       `[Instrucción: Detecta el contexto de la situación (General / Negociación / Trabajo / Política interna / Cliente / Ventas / Carrera / Oferta laboral) y devuélvelo como "CONTEXTO: <valor>" al inicio de tu respuesta.]`
     ];
-    if (profileLine) {
-      payloadLines.push(profileLine);
-    }
     payloadLines.push(text);
     const payloadFinal = payloadLines.join("\n");
 
@@ -1854,8 +1797,6 @@
     if (WELCOME) {
       addMessage("assistant", WELCOME);
     }
-    genderSelect.value = "";
-    ageSelect.value = "";
     if (workspaceEl) {
       workspaceEl.classList.remove("is-analysis");
     }
