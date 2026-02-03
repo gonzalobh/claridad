@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claridad - Dashboard Concept</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Un toque sutil de gradiente para fondo tech */
+        body { background-color: #0B0C10; color: #C5C6C7; }
+        .card { background-color: #1F2833; border: 1px solid #2e3b4a; transition: all 0.3s ease; }
+        .card:hover { border-color: #66FCF1; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(102, 252, 241, 0.1); }
+        .accent-text { color: #66FCF1; }
+        .accent-bg { background-color: #45A29E; }
+        
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0B0C10; }
+        ::-webkit-scrollbar-thumb { background: #1F2833; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #45A29E; }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen p-6 md:p-12">
+
+    <header class="mb-10 flex justify-between items-center max-w-7xl mx-auto border-b border-gray-800 pb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-white tracking-tight">Conflicto con Lead Developer</h1>
+            <p class="text-gray-500 text-sm mt-1">Análisis de Decisión • ID: #9281</p>
+        </div>
+        <div class="flex gap-3">
+             <button class="px-4 py-2 rounded bg-gray-800 hover:bg-gray-700 text-xs text-white border border-gray-700">Compartir</button>
+             <button class="px-4 py-2 rounded bg-gray-800 hover:bg-gray-700 text-xs text-white border border-gray-700">Exportar PDF</button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 relative">
+
+        <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-6 h-fit">
+            
+            <div class="card p-6 rounded-xl border-l-4 border-l-[#66FCF1]">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Veredicto IA</h3>
+                <p class="text-xl font-medium text-white leading-tight">
+                    "Mantener la ambigüedad y asumir el costo emocional a corto plazo."
+                </p>
+                <div class="mt-4 flex items-center gap-2">
+                    <span class="px-2 py-1 rounded bg-green-900/30 text-green-400 text-xs border border-green-800">Confianza: 92%</span>
+                    <span class="px-2 py-1 rounded bg-blue-900/30 text-blue-400 text-xs border border-blue-800">Modelo: Eisenhover</span>
+                </div>
+            </div>
+
+            <div class="card p-6 rounded-xl">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-4">Decision Drivers</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs mb-1"><span>Riesgo Operativo</span> <span class="text-red-400">Alto</span></div>
+                        <div class="w-full bg-gray-700 rounded-full h-1.5"><div class="bg-red-500 h-1.5 rounded-full" style="width: 85%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs mb-1"><span>Urgencia</span> <span class="text-orange-400">Media-Alta</span></div>
+                        <div class="w-full bg-gray-700 rounded-full h-1.5"><div class="bg-orange-400 h-1.5 rounded-full" style="width: 70%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs mb-1"><span>Costo de Inacción</span> <span class="text-gray-300">Crítico</span></div>
+                        <div class="w-full bg-gray-700 rounded-full h-1.5"><div class="bg-gray-300 h-1.5 rounded-full" style="width: 95%"></div></div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 p-3 bg-gray-900/50 rounded text-xs text-gray-400">
+                    💡 <strong>Insight:</strong> La dependencia técnica es el factor bloqueante principal.
+                </div>
+            </div>
+
+        </aside>
+
+
+        <section class="lg:col-span-8 space-y-8">
+
+            <div class="space-y-4">
+                <h2 class="text-xl font-semibold text-white">Análisis de Situación</h2>
+                <p class="text-gray-400 leading-relaxed">
+                    El Lead Developer es esencial para la estabilidad técnica, pero su comportamiento está causando fricción significativa. 
+                    Existe un riesgo real de "fuga de talento" en los junior si no se actúa, pero un riesgo de "colapso técnico" si se actúa impulsivamente.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div class="bg-[#151b24] p-4 rounded-lg border border-gray-800">
+                        <div class="text-[#66FCF1] mb-2">🎯 Prioriza</div>
+                        <div class="text-sm">Estabilidad del producto sobre el clima laboral (temporalmente).</div>
+                    </div>
+                    <div class="bg-[#151b24] p-4 rounded-lg border border-gray-800">
+                        <div class="text-red-400 mb-2">🚫 Evita</div>
+                        <div class="text-sm">Ultimátums sin tener un reemplazo listo.</div>
+                    </div>
+                    <div class="bg-[#151b24] p-4 rounded-lg border border-gray-800">
+                        <div class="text-yellow-400 mb-2">👀 Señal Clave</div>
+                        <div class="text-sm">Reacción del equipo ante la ausencia del Lead.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800"></div>
+
+            <div>
+                <h2 class="text-xl font-semibold text-white mb-6">Caminos de Acción</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    
+                    <div class="card p-5 rounded-xl border border-[#66FCF1]/30 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 bg-[#66FCF1] text-black text-[10px] font-bold px-2 py-1 uppercase">Recomendada</div>
+                        
+                        <h3 class="text-lg font-bold text-white mb-1">Opción 1: Transición Gradual</h3>
+                        <p class="text-sm text-gray-400 mb-4 h-10">Desarrollar plan de redistribución de conocimiento mientras se audita el desempeño.</p>
+                        
+                        <div class="bg-gray-900/50 p-3 rounded mb-4 text-xs space-y-2">
+                            <div class="flex gap-2"><span class="text-green-400">GANAS:</span> <span>Minimiza riesgo operativo.</span></div>
+                            <div class="flex gap-2"><span class="text-red-400">PIERDES:</span> <span>Requiere mucho tiempo/esfuerzo.</span></div>
+                        </div>
+
+                        <div class="flex gap-2 mt-auto pt-2">
+                            <button class="flex-1 bg-[#66FCF1] hover:bg-[#45A29E] text-black font-bold py-2 rounded text-xs transition">Ejecutar Plan</button>
+                            <button class="px-3 py-2 bg-gray-800 border border-gray-600 rounded text-gray-300 hover:text-white text-xs">Ver Email</button>
+                        </div>
+                    </div>
+
+                    <div class="card p-5 rounded-xl">
+                        <h3 class="text-lg font-bold text-white mb-1">Opción 2: Liderazgo Técnico</h3>
+                        <p class="text-sm text-gray-400 mb-4 h-10">Formar un grupo de desarrolladores senior para diluir la dependencia.</p>
+                        
+                        <div class="bg-gray-900/50 p-3 rounded mb-4 text-xs space-y-2">
+                            <div class="flex gap-2"><span class="text-green-400">GANAS:</span> <span>Diversidad de ideas.</span></div>
+                            <div class="flex gap-2"><span class="text-red-400">PIERDES:</span> <span>Conflictos de autoridad inmediatos.</span></div>
+                        </div>
+
+                        <div class="flex gap-2 mt-auto pt-2">
+                            <button class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 rounded text-xs transition">Seleccionar</button>
+                        </div>
+                    </div>
+
+                     <div class="card p-5 rounded-xl opacity-75">
+                        <h3 class="text-lg font-bold text-white mb-1">Opción 3: Plan de Mejora</h3>
+                        <p class="text-sm text-gray-400 mb-4 h-10">Confrontación directa y establecimiento de KPIs de comportamiento.</p>
+                        
+                        <div class="bg-gray-900/50 p-3 rounded mb-4 text-xs space-y-2">
+                            <div class="flex gap-2"><span class="text-green-400">GANAS:</span> <span>Claridad inmediata.</span></div>
+                            <div class="flex gap-2"><span class="text-red-400">PIERDES:</span> <span>Riesgo alto de renuncia.</span></div>
+                        </div>
+
+                        <div class="flex gap-2 mt-auto pt-2">
+                            <button class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 rounded text-xs transition">Seleccionar</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>
