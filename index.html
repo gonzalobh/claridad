@@ -1377,10 +1377,39 @@
 
   function buildOptionDynamicLine(optionText) {
     if (!optionText) return "";
-    let cleaned = optionText.replace(/\r\n/g, "\n").trim();
+    const { body } = extractOptionTitleAndBody(optionText);
+    let cleaned = body.replace(/\r\n/g, "\n").trim();
     cleaned = cleaned.replace(/^opci[oó]n\s*[A-C]\s*[:\-–—]\s*/i, "").trim();
     const candidate = trimToSentences(cleaned, 2);
     return candidate || cleaned;
+  }
+
+  function extractOptionTitleAndBody(optionText) {
+    const fallbackTitle = "Movimiento propuesto";
+    if (!optionText) {
+      return { title: fallbackTitle, body: "" };
+    }
+    const normalized = optionText.replace(/\r\n/g, "\n").trim();
+    const lines = normalized.split("\n");
+    let title = fallbackTitle;
+    let foundTitle = false;
+    const bodyLines = [];
+    lines.forEach((line) => {
+      if (!foundTitle) {
+        const match = line.match(/^\s*T[IÍ]TULO\s*:\s*(.*)$/i);
+        if (match) {
+          const candidate = match[1].trim();
+          if (candidate) {
+            title = candidate;
+          }
+          foundTitle = true;
+          return;
+        }
+      }
+      bodyLines.push(line);
+    });
+    const body = bodyLines.join("\n").trim();
+    return { title, body };
   }
 
   function addAssistantResponse(analysisText, options, recommendation, detectedContext) {
@@ -1470,16 +1499,6 @@
 
       if (!optionsListEl) return;
       optionsListEl.innerHTML = "";
-      const optionTitles = {
-        A: "Esperar",
-        B: "Abrir diálogo",
-        C: "Forzar definición"
-      };
-      const optionConsequences = {
-        A: "Limpia la tensión inmediata.",
-        B: "Reordena el marco.",
-        C: "Restablece autoridad."
-      };
       const optionOrder = ["B", "A", "C"];
       const normalizedRecommendation = recommendation && ["A", "B", "C"].includes(recommendation)
         ? recommendation
@@ -1491,6 +1510,7 @@
         .map(label => options.find(option => option.label === label))
         .filter(Boolean);
       displayOptions.forEach((option, index) => {
+        const { title: dynamicTitle, body: optionBodyText } = extractOptionTitleAndBody(option.text);
         const displayIndex = index + 1;
         const card = document.createElement("div");
         card.className = "option-card";
@@ -1511,7 +1531,7 @@
 
         const title = document.createElement("div");
         title.className = "option-title";
-        title.textContent = `Opción ${displayIndex} — ${optionTitles[option.label] || "Opción"}`;
+        title.textContent = `Opción ${displayIndex} — ${dynamicTitle}`;
         titleWrap.appendChild(indexBadge);
         titleWrap.appendChild(title);
         header.appendChild(titleWrap);
@@ -1525,22 +1545,16 @@
 
         const tradeoff = document.createElement("div");
         tradeoff.className = "option-tradeoff";
-        const tradeoffBase = document.createElement("div");
-        tradeoffBase.className = "option-tradeoff-base";
-        tradeoffBase.textContent = optionConsequences[option.label] || "";
         const tradeoffDynamic = document.createElement("div");
         tradeoffDynamic.className = "option-tradeoff-dynamic";
-        tradeoffDynamic.textContent = buildOptionDynamicLine(option.text);
-        if (tradeoffBase.textContent) {
-          tradeoff.appendChild(tradeoffBase);
-        }
+        tradeoffDynamic.textContent = buildOptionDynamicLine(optionBodyText);
         if (tradeoffDynamic.textContent) {
           tradeoff.appendChild(tradeoffDynamic);
         }
 
         const tradeoffGrid = document.createElement("div");
         tradeoffGrid.className = "tradeoff-grid";
-        const derivedTradeoff = deriveGainsLosses(option.text, option.label, resolvedContext);
+        const derivedTradeoff = deriveGainsLosses(optionBodyText, option.label, resolvedContext);
 
         const gainsCol = document.createElement("div");
         gainsCol.className = "tradeoff-col";
@@ -1596,7 +1610,7 @@
         copyButton.addEventListener("click", async (event) => {
           event.stopPropagation();
           try {
-            await navigator.clipboard.writeText(option.text);
+            await navigator.clipboard.writeText(optionBodyText);
             copyFeedback.classList.remove("is-visible");
             void copyFeedback.offsetWidth;
             copyFeedback.classList.add("is-visible");
