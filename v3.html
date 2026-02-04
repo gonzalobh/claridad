@@ -743,38 +743,6 @@
       color: var(--text-secondary);
     }
 
-    .tradeoff-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      border-top: 1px solid var(--border);
-      padding-top: 10px;
-    }
-
-    .tradeoff-col {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--text-primary);
-    }
-
-    .tradeoff-title {
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 11px;
-      color: var(--text-secondary);
-    }
-
-    .tradeoff-list {
-      margin: 0;
-      padding-left: 18px;
-      display: grid;
-      gap: 4px;
-      color: var(--text-primary);
-    }
-
     .option-body {
       max-height: none;
       opacity: 1;
@@ -2027,19 +1995,56 @@
     const title = optionTitle || "Movimiento";
     const body = (optionBody || "").trim();
     if (type === "email") {
+      const contextLine = trimToSentences(situation, 2)
+        || "Estamos evaluando el siguiente movimiento y su impacto operativo.";
+      const decisionLine = trimToSentences(body, 1) || "Avanzar con el movimiento acordado.";
       return [
-        `Asunto: Próximo paso — ${title}`,
+        `ASUNTO: [Decisión] ${title} — <Fecha>`,
+        "PARA: <Nombre / Fondo / Equipo>",
         "",
-        "Hola,",
+        "CUERPO:",
+        "Hola <Nombre>,",
         "",
-        "Propongo lo siguiente:",
-        `• ${trimToSentences(body, 1) || "Definir el próximo paso claro."}`,
-        `• ${trimToSentences(situation, 1) || "Alinear el contexto y el objetivo."}`,
-        "• Confirmar un acuerdo mínimo y tiempos.",
+        `${contextLine}`,
         "",
-        "Quedo atento/a para avanzar.",
+        `Decisión: ${decisionLine}`,
         "",
-        "Gracias,"
+        "Motivos:",
+        "• Mayor control y claridad del siguiente paso.",
+        "• Mitiga el costo de no actuar y reduce ambigüedad.",
+        "",
+        "Próximos pasos:",
+        "• <Acción 1> — <Fecha>",
+        "• <Acción 2> — <Fecha>",
+        "• <Acción 3> — <Fecha>",
+        "",
+        "Gracias,",
+        "<Tu nombre>",
+        "",
+        "---",
+        "Versión para fondo / inversionista:",
+        `ASUNTO: [Decisión] ${title} — <Fecha>`,
+        "PARA: <Nombre / Fondo / Comité>",
+        "",
+        "Estimado/a <Nombre>,",
+        "",
+        `${contextLine}`,
+        "",
+        `Decisión: ${decisionLine}`,
+        "",
+        "Racional:",
+        "• Mayor control y claridad operativa.",
+        "• Minimiza riesgo y costo de no actuar.",
+        "",
+        "Siguientes pasos propuestos:",
+        "• <Hito 1> — <Fecha>",
+        "• <Hito 2> — <Fecha>",
+        "• <Hito 3> — <Fecha>",
+        "",
+        "Quedo atento/a a comentarios.",
+        "",
+        "Saludos,",
+        "<Tu nombre>"
       ].join("\n");
     }
     const checklistItems = [
@@ -2536,8 +2541,14 @@
     const { body } = extractOptionTitleAndBody(optionText);
     let cleaned = body.replace(/\r\n/g, "\n").trim();
     cleaned = cleaned.replace(/^opci[oó]n\s*[A-C]\s*[:\-–—]\s*/i, "").trim();
+    cleaned = stripTradeoffPrefix(cleaned);
     const candidate = trimToSentences(cleaned, 2);
     return candidate || cleaned;
+  }
+
+  function stripTradeoffPrefix(text) {
+    if (!text) return "";
+    return text.replace(/(^|\n)\s*trade[-\s]?off\s*:\s*/gmi, "$1").trim();
   }
 
   function extractOptionTitleAndBody(optionText) {
@@ -2564,7 +2575,7 @@
       }
       bodyLines.push(line);
     });
-    const body = bodyLines.join("\n").trim();
+    const body = stripTradeoffPrefix(bodyLines.join("\n").trim());
     return { title, body };
   }
 
@@ -2841,7 +2852,16 @@
 
         const simScore = document.createElement("div");
         simScore.className = "option-sim-score";
-        simScore.innerHTML = `Score simulado: <span class="option-sim-value">--/10</span>`;
+        simScore.innerHTML = `Match con tus sliders: <span class="option-sim-value">--/10</span>`;
+        const simInfo = document.createElement("span");
+        simInfo.className = "meta-item";
+        simInfo.dataset.tooltip =
+          "Estimación automática (heurística local) basada en tus sliders: riesgo, urgencia, ambigüedad y costo de no actuar.";
+        const simInfoIcon = document.createElement("span");
+        simInfoIcon.className = "meta-info";
+        simInfoIcon.textContent = "ⓘ";
+        simInfo.appendChild(simInfoIcon);
+        simScore.appendChild(simInfo);
 
         const tradeoff = document.createElement("div");
         tradeoff.className = "option-tradeoff";
@@ -2851,43 +2871,6 @@
         if (tradeoffDynamic.textContent) {
           tradeoff.appendChild(tradeoffDynamic);
         }
-
-        const tradeoffGrid = document.createElement("div");
-        tradeoffGrid.className = "tradeoff-grid";
-        const derivedTradeoff = deriveGainsLosses(optionBodyText, option.label, resolvedContext);
-
-        const gainsCol = document.createElement("div");
-        gainsCol.className = "tradeoff-col";
-        const gainsTitle = document.createElement("div");
-        gainsTitle.className = "tradeoff-title";
-        gainsTitle.textContent = "Ganas";
-        const gainsList = document.createElement("ul");
-        gainsList.className = "tradeoff-list";
-        derivedTradeoff.gains.slice(0, 2).forEach(item => {
-          const li = document.createElement("li");
-          li.textContent = item;
-          gainsList.appendChild(li);
-        });
-        gainsCol.appendChild(gainsTitle);
-        gainsCol.appendChild(gainsList);
-
-        const lossesCol = document.createElement("div");
-        lossesCol.className = "tradeoff-col";
-        const lossesTitle = document.createElement("div");
-        lossesTitle.className = "tradeoff-title";
-        lossesTitle.textContent = "Pierdes";
-        const lossesList = document.createElement("ul");
-        lossesList.className = "tradeoff-list";
-        derivedTradeoff.losses.slice(0, 1).forEach(item => {
-          const li = document.createElement("li");
-          li.textContent = item;
-          lossesList.appendChild(li);
-        });
-        lossesCol.appendChild(lossesTitle);
-        lossesCol.appendChild(lossesList);
-
-        tradeoffGrid.appendChild(gainsCol);
-        tradeoffGrid.appendChild(lossesCol);
 
         const body = document.createElement("div");
         body.className = "option-body";
@@ -2928,11 +2911,12 @@
           const premortemToggle = document.createElement("button");
           premortemToggle.type = "button";
           premortemToggle.className = "premortem-toggle";
-          premortemToggle.textContent = "Pre-mortem: lo peor que podría pasar";
+          premortemToggle.textContent = "Pre-mortem (1 min): ¿qué podría salir mal?";
           const premortemBody = document.createElement("div");
           premortemBody.className = "premortem-body";
           const premortemData = generatePremortem(optionBodyText, dashboardState.activeMetrics, resolvedContext);
           premortemBody.innerHTML = `
+            <div>Generado automáticamente para detectar riesgos antes de ejecutar.</div>
             <div><strong>Peor caso:</strong> ${premortemData.worst}</div>
             <div><strong>Mitigación:</strong></div>
           `;
@@ -2990,7 +2974,6 @@
         card.appendChild(header);
         card.appendChild(simScore);
         card.appendChild(tradeoff);
-        card.appendChild(tradeoffGrid);
         card.appendChild(body);
         card.classList.add("option-animate");
         card.style.animationDelay = `${index * 60}ms`;
