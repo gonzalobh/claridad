@@ -361,31 +361,6 @@
       opacity: 0.7;
     }
 
-    .verdict-block {
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 14px 18px;
-      border-left: 2px solid var(--accent);
-      background: transparent;
-      margin-top: 12px;
-    }
-
-    .verdict-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.22em;
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
-
-    .verdict-body {
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--text-secondary);
-    }
-
     .reasoning-toggle {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -739,10 +714,6 @@
       color: var(--text-secondary);
     }
 
-    .option-tradeoff-dynamic {
-      color: var(--text-secondary);
-    }
-
     .option-body {
       max-height: none;
       opacity: 1;
@@ -913,7 +884,6 @@
     .response-shell.is-loading .trust-row,
     .response-shell.is-loading .options-title,
     .response-shell.is-loading .options-list,
-    .response-shell.is-loading .verdict-block,
     .response-shell.is-loading .reasoning-toggle,
     .response-shell.is-loading .options-wrap,
     .response-shell.is-loading .compare-wrap,
@@ -2470,19 +2440,6 @@
     };
   }
 
-  function buildOptionDynamicLine(optionText) {
-    if (!optionText) return "";
-    const { body } = extractOptionTitleAndBody(optionText);
-    let cleaned = body.replace(/\r\n/g, "\n").trim();
-    cleaned = cleaned.replace(/^opci[oó]n\s*[A-C]\s*[:\-–—]\s*/i, "").trim();
-    cleaned = stripTradeoffPrefix(cleaned);
-    const candidate = trimToSentences(cleaned, 5) || cleaned;
-    if (candidate.length > 520) {
-      return `${candidate.slice(0, 520).trim()}…`;
-    }
-    return candidate;
-  }
-
   function buildStrategicOptionCopy(optionText, optionLabel, context) {
     if (!optionText) return "";
     const { body } = extractOptionTitleAndBody(optionText);
@@ -2823,15 +2780,6 @@
         simInfo.appendChild(simInfoIcon);
         simScore.appendChild(simInfo);
 
-        const tradeoff = document.createElement("div");
-        tradeoff.className = "option-tradeoff";
-        const tradeoffDynamic = document.createElement("div");
-        tradeoffDynamic.className = "option-tradeoff-dynamic";
-        tradeoffDynamic.textContent = buildOptionDynamicLine(optionBodyText);
-        if (tradeoffDynamic.textContent) {
-          tradeoff.appendChild(tradeoffDynamic);
-        }
-
         const body = document.createElement("div");
         body.className = "option-body";
 
@@ -2909,7 +2857,6 @@
         body.appendChild(copyRow);
         card.appendChild(header);
         card.appendChild(simScore);
-        card.appendChild(tradeoff);
         card.appendChild(body);
         card.classList.add("option-animate");
         card.style.animationDelay = `${index * 60}ms`;
@@ -3070,21 +3017,6 @@
     insightBlock.appendChild(insightSubtextEl);
     insightBlock.classList.add("cc-box");
 
-    const verdictBlock = document.createElement("div");
-    verdictBlock.className = "verdict-block";
-
-    const verdictTitle = document.createElement("div");
-    verdictTitle.className = "verdict-title";
-    verdictTitle.textContent = "VEREDICTO";
-
-    const verdictBody = document.createElement("div");
-    verdictBody.className = "verdict-body";
-    verdictBody.textContent = "No decidir ahora mantiene la ambigüedad y aumenta el costo emocional.";
-
-    verdictBlock.appendChild(verdictTitle);
-    verdictBlock.appendChild(verdictBody);
-    verdictBlock.classList.add("cc-block");
-
     const trustRow = createTrustRow();
     trustRowEl = trustRow.row;
     trustRowEl.style.display = "none";
@@ -3155,7 +3087,6 @@
     ccLeft.appendChild(dashboardEl);
     ccLeft.appendChild(radarCardEl);
 
-    ccRight.appendChild(verdictBlock);
     ccRight.appendChild(summaryBlocksEl);
     ccRight.appendChild(optionsWrapEl);
     ccRight.appendChild(compareWrapEl);
