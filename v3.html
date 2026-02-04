@@ -1128,40 +1128,6 @@
       font-weight: 600;
     }
 
-    .premortem {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      border-top: 1px solid var(--border);
-      padding-top: 10px;
-    }
-
-    .premortem-toggle {
-      padding: 0;
-      border: none;
-      background: none;
-      color: var(--text-secondary);
-      font-size: 12px;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .premortem-body {
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease, opacity 0.3s ease;
-      display: grid;
-      gap: 6px;
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-
-    .premortem-body.is-open {
-      max-height: 240px;
-      opacity: 1;
-    }
-
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -1995,54 +1961,17 @@
     const title = optionTitle || "Movimiento";
     const body = (optionBody || "").trim();
     if (type === "email") {
-      const contextLine = trimToSentences(situation, 2)
-        || "Estamos evaluando el siguiente movimiento y su impacto operativo.";
-      const decisionLine = trimToSentences(body, 1) || "Avanzar con el movimiento acordado.";
+      const contextLine = trimToSentences(situation, 1);
+      const bodyLines = trimToSentences(body, 3) || body;
+      const contextBlock = contextLine ? `${contextLine}\n` : "";
       return [
-        `ASUNTO: [Decisión] ${title} — <Fecha>`,
-        "PARA: <Nombre / Fondo / Equipo>",
-        "",
-        "CUERPO:",
+        `Asunto: ${title} — propuesta concreta`,
         "Hola <Nombre>,",
-        "",
-        `${contextLine}`,
-        "",
-        `Decisión: ${decisionLine}`,
-        "",
-        "Motivos:",
-        "• Mayor control y claridad del siguiente paso.",
-        "• Mitiga el costo de no actuar y reduce ambigüedad.",
-        "",
+        "Gracias por la propuesta. Para avanzar, propongo esto:",
+        `${contextBlock}${bodyLines}`,
         "Próximos pasos:",
-        "• <Acción 1> — <Fecha>",
-        "• <Acción 2> — <Fecha>",
-        "• <Acción 3> — <Fecha>",
-        "",
-        "Gracias,",
-        "<Tu nombre>",
-        "",
-        "---",
-        "Versión para fondo / inversionista:",
-        `ASUNTO: [Decisión] ${title} — <Fecha>`,
-        "PARA: <Nombre / Fondo / Comité>",
-        "",
-        "Estimado/a <Nombre>,",
-        "",
-        `${contextLine}`,
-        "",
-        `Decisión: ${decisionLine}`,
-        "",
-        "Racional:",
-        "• Mayor control y claridad operativa.",
-        "• Minimiza riesgo y costo de no actuar.",
-        "",
-        "Siguientes pasos propuestos:",
-        "• <Hito 1> — <Fecha>",
-        "• <Hito 2> — <Fecha>",
-        "• <Hito 3> — <Fecha>",
-        "",
-        "Quedo atento/a a comentarios.",
-        "",
+        "• Si les hace sentido, coordinemos una llamada de 20–30 min para revisarlo.",
+        "• Luego enviamos un borrador de términos (term sheet) con los ajustes acordados.",
         "Saludos,",
         "<Tu nombre>"
       ].join("\n");
@@ -2056,28 +1985,6 @@
       "Enviar y confirmar recepción."
     ];
     return checklistItems.slice(0, 7).map(item => `• ${item}`).join("\n");
-  }
-
-  function generatePremortem(optionBodyText, metrics, context) {
-    const risk = metrics?.risk ?? 3;
-    const urgency = metrics?.urgency ?? 3;
-    const ambiguity = metrics?.ambiguity ?? 3;
-    let worst = "La decisión genera fricción y retrasa el acuerdo esperado.";
-    if (risk >= 4) {
-      worst = "El movimiento aumenta el conflicto y deja una pérdida difícil de revertir.";
-    }
-    if (ambiguity >= 4) {
-      worst = "La falta de claridad provoca malentendidos y resultados inconsistentes.";
-    }
-    if (urgency >= 4) {
-      worst = "La prisa lleva a un compromiso mal alineado con el objetivo.";
-    }
-    const mitigations = [
-      "Definir límites y criterios de éxito por escrito.",
-      "Validar el acuerdo con la contraparte antes de ejecutar.",
-      `Registrar decisiones clave y responsabilidades (${context || "General"}).`
-    ];
-    return { worst, mitigations };
   }
 
   function buildDecisionDashboard(metrics, context = "General", analysisText = "", optionTexts = []) {
@@ -2542,8 +2449,11 @@
     let cleaned = body.replace(/\r\n/g, "\n").trim();
     cleaned = cleaned.replace(/^opci[oó]n\s*[A-C]\s*[:\-–—]\s*/i, "").trim();
     cleaned = stripTradeoffPrefix(cleaned);
-    const candidate = trimToSentences(cleaned, 2);
-    return candidate || cleaned;
+    const candidate = trimToSentences(cleaned, 5) || cleaned;
+    if (candidate.length > 520) {
+      return `${candidate.slice(0, 520).trim()}…`;
+    }
+    return candidate;
   }
 
   function stripTradeoffPrefix(text) {
@@ -2843,7 +2753,7 @@
         titleWrap.appendChild(title);
         header.appendChild(titleWrap);
 
-        if (normalizedRecommendation && option.label === normalizedRecommendation && displayIndex === 1) {
+        if (normalizedRecommendation && option.label === normalizedRecommendation) {
           const tag = document.createElement("div");
           tag.className = "option-tag";
           tag.textContent = "Recomendada";
@@ -2852,11 +2762,11 @@
 
         const simScore = document.createElement("div");
         simScore.className = "option-sim-score";
-        simScore.innerHTML = `Match con tus sliders: <span class="option-sim-value">--/10</span>`;
+        simScore.innerHTML = `Alineación con tus prioridades: <span class="option-sim-value">--/10</span>`;
         const simInfo = document.createElement("span");
         simInfo.className = "meta-item";
         simInfo.dataset.tooltip =
-          "Estimación automática (heurística local) basada en tus sliders: riesgo, urgencia, ambigüedad y costo de no actuar.";
+          "Estimación automática (heurística local) según tus sliders: riesgo, urgencia, ambigüedad y costo de no actuar. No es un puntaje ‘real’, solo una guía.";
         const simInfoIcon = document.createElement("span");
         simInfoIcon.className = "meta-info";
         simInfoIcon.textContent = "ⓘ";
@@ -2886,7 +2796,7 @@
           const emailBtn = document.createElement("button");
           emailBtn.type = "button";
           emailBtn.className = "exec-button";
-          emailBtn.textContent = "Borrador de email";
+          emailBtn.textContent = "Email al inversionista";
           const checklistBtn = document.createElement("button");
           checklistBtn.type = "button";
           checklistBtn.className = "exec-button";
@@ -2899,40 +2809,11 @@
 
           emailBtn.addEventListener("click", () => {
             const content = generateDeliverable("email", lastUserText, dynamicTitle, optionBodyText, resolvedContext);
-            openModal(`Borrador de email — Opción ${displayIndex}`, content);
+            openModal(`Email al inversionista — Opción ${displayIndex}`, content);
           });
           checklistBtn.addEventListener("click", () => {
             const content = generateDeliverable("checklist", lastUserText, dynamicTitle, optionBodyText, resolvedContext);
             openModal(`Checklist 10 min — Opción ${displayIndex}`, content);
-          });
-
-          const premortem = document.createElement("div");
-          premortem.className = "premortem";
-          const premortemToggle = document.createElement("button");
-          premortemToggle.type = "button";
-          premortemToggle.className = "premortem-toggle";
-          premortemToggle.textContent = "Pre-mortem (1 min): ¿qué podría salir mal?";
-          const premortemBody = document.createElement("div");
-          premortemBody.className = "premortem-body";
-          const premortemData = generatePremortem(optionBodyText, dashboardState.activeMetrics, resolvedContext);
-          premortemBody.innerHTML = `
-            <div>Generado automáticamente para detectar riesgos antes de ejecutar.</div>
-            <div><strong>Peor caso:</strong> ${premortemData.worst}</div>
-            <div><strong>Mitigación:</strong></div>
-          `;
-          const mitigationList = document.createElement("ul");
-          premortemData.mitigations.forEach(item => {
-            const li = document.createElement("li");
-            li.textContent = item;
-            mitigationList.appendChild(li);
-          });
-          premortemBody.appendChild(mitigationList);
-          premortem.appendChild(premortemToggle);
-          premortem.appendChild(premortemBody);
-          body.appendChild(premortem);
-
-          premortemToggle.addEventListener("click", () => {
-            premortemBody.classList.toggle("is-open");
           });
         }
 
