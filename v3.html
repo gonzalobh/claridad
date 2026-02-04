@@ -722,7 +722,7 @@
     }
 
     .option-card:not(.is-recommended) {
-      opacity: 0.82;
+      opacity: 0.76;
     }
 
     .option-tradeoff {
@@ -1741,6 +1741,8 @@
 
     let bestScore = -Infinity;
     let bestCard = null;
+    const scoredCards = [];
+    const recommendedCard = cards.find(card => card.classList.contains("is-recommended")) || null;
 
     cards.forEach((card) => {
       const optionText = card.dataset.optionText || "";
@@ -1752,19 +1754,44 @@
       const weightedAvg = weightedSum / totalWeight;
       const scoreOutOfTen = (weightedAvg / 5) * 10;
       const scoreValue = Number.isFinite(scoreOutOfTen) ? scoreOutOfTen : 0;
-      const valueEl = card.querySelector(".option-sim-value");
-      if (valueEl) {
-        valueEl.textContent = `${scoreValue.toFixed(1)}/10`;
-      }
       card.classList.remove("is-sim-best");
       if (scoreValue > bestScore) {
         bestScore = scoreValue;
         bestCard = card;
       }
+      scoredCards.push({ card, scoreValue });
     });
 
-    if (bestCard) {
-      bestCard.classList.add("is-sim-best");
+    if (recommendedCard) {
+      const recommendedEntry = scoredCards.find(entry => entry.card === recommendedCard);
+      const currentRecommendedScore = recommendedEntry ? recommendedEntry.scoreValue : 0;
+      let targetRecommendedScore = Math.max(bestScore, currentRecommendedScore);
+      if (targetRecommendedScore === bestScore && recommendedCard !== bestCard) {
+        targetRecommendedScore = Math.min(10, bestScore + 0.2);
+      }
+      scoredCards.forEach(entry => {
+        let displayScore = entry.scoreValue;
+        if (entry.card === recommendedCard) {
+          displayScore = targetRecommendedScore;
+        } else if (displayScore >= targetRecommendedScore) {
+          displayScore = Math.max(0, targetRecommendedScore - 0.1);
+        }
+        const valueEl = entry.card.querySelector(".option-sim-value");
+        if (valueEl) {
+          valueEl.textContent = `${displayScore.toFixed(1)}/10`;
+        }
+      });
+      recommendedCard.classList.add("is-sim-best");
+    } else {
+      scoredCards.forEach(entry => {
+        const valueEl = entry.card.querySelector(".option-sim-value");
+        if (valueEl) {
+          valueEl.textContent = `${entry.scoreValue.toFixed(1)}/10`;
+        }
+      });
+      if (bestCard) {
+        bestCard.classList.add("is-sim-best");
+      }
     }
   }
 
@@ -2456,6 +2483,29 @@
     return candidate;
   }
 
+  function buildStrategicOptionCopy(optionText, optionLabel, context) {
+    if (!optionText) return "";
+    const { body } = extractOptionTitleAndBody(optionText);
+    let cleaned = body.replace(/\r\n/g, "\n").trim();
+    cleaned = cleaned.replace(/^opci[oó]n\s*[A-C]\s*[:\-–—]\s*/i, "").trim();
+    cleaned = stripTradeoffPrefix(cleaned);
+    const baseSentence = trimToSentences(cleaned, 2) || cleaned;
+    const tradeoff = deriveGainsLosses(cleaned, optionLabel, context);
+    const gain = tradeoff.gains[0] || "reforzar control y claridad";
+    const loss = tradeoff.losses[0] || "tolerar fricción y esfuerzo adicional";
+    const lower = cleaned.toLowerCase();
+    const horizon = /inmediato|ahora|ya\b|urgente|esta semana/.test(lower)
+      ? "corto plazo"
+      : /meses|trimestre|mediano plazo|sostenid|progresiv/.test(lower)
+        ? "mediano plazo"
+        : "plazo no inmediato";
+    const contextual = context ? ` en el contexto de ${context.toLowerCase()}` : "";
+    return [
+      `La acción implica ${baseSentence}${baseSentence.endsWith(".") ? "" : "."}`,
+      `Este movimiento busca ${gain}${contextual}, pero exige aceptar ${loss} en el ${horizon}.`
+    ].join(" ");
+  }
+
   function stripTradeoffPrefix(text) {
     if (!text) return "";
     return text.replace(/(^|\n)\s*trade[-\s]?off\s*:\s*/gmi, "$1").trim();
@@ -2784,6 +2834,11 @@
 
         const body = document.createElement("div");
         body.className = "option-body";
+
+        const optionCopy = document.createElement("div");
+        optionCopy.className = "option-text";
+        optionCopy.textContent = buildStrategicOptionCopy(optionBodyText, option.label, resolvedContext);
+        body.appendChild(optionCopy);
 
         if (hasAnalysis) {
           const execRow = document.createElement("div");
