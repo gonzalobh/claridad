@@ -412,11 +412,33 @@
       gap: 4px;
     }
 
+    .analysis-user-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
     .analysis-user-title {
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       font-size: 10px;
+    }
+
+    .analysis-copy-button {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .analysis-copy-button:hover {
+      border-color: var(--text-secondary);
+      color: var(--text-primary);
     }
 
     .analysis-user-body {
@@ -1412,15 +1434,44 @@
     const wrapper = document.createElement("div");
     wrapper.className = "analysis-user-card";
 
+    const header = document.createElement("div");
+    header.className = "analysis-user-header";
+
     const title = document.createElement("div");
     title.className = "analysis-user-title";
     title.textContent = "Situación analizada";
+
+    const copyButton = document.createElement("button");
+    copyButton.type = "button";
+    copyButton.className = "analysis-copy-button";
+    copyButton.textContent = "Copiar";
+
+    const copyFeedback = document.createElement("span");
+    copyFeedback.className = "copy-feedback";
+    copyFeedback.textContent = "Copiado ✓";
 
     const body = document.createElement("div");
     body.className = "analysis-user-body";
     body.textContent = text;
 
-    wrapper.appendChild(title);
+    copyButton.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(body.textContent || "");
+        copyFeedback.classList.remove("is-visible");
+        void copyFeedback.offsetWidth;
+        copyFeedback.classList.add("is-visible");
+        setTimeout(() => {
+          copyFeedback.classList.remove("is-visible");
+        }, 900);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    header.appendChild(title);
+    header.appendChild(copyButton);
+    header.appendChild(copyFeedback);
+    wrapper.appendChild(header);
     wrapper.appendChild(body);
 
     return wrapper;
@@ -2530,6 +2581,7 @@
         if (analysisText) {
           const sections = extractAnalysisSections(analysisText);
           if (sections) {
+            const lectura = sections.find(section => /lectura r[áa]pida/i.test(section.title));
             const pasando = sections.find(section => /qu[eé]\s+est[aá]\s+pasando/i.test(section.title));
             const estrategia = sections.find(section => /estrategia/i.test(section.title));
             if (pasando && pasando.body) {
@@ -2541,6 +2593,19 @@
               const body = document.createElement("div");
               body.className = "summary-body";
               body.textContent = trimToSentences(pasando.body, 2) || pasando.body;
+              block.appendChild(title);
+              block.appendChild(body);
+              summaryBlocksEl.appendChild(block);
+            }
+            if (lectura && lectura.body) {
+              const block = document.createElement("div");
+              block.className = "summary-block";
+              const title = document.createElement("div");
+              title.className = "summary-title";
+              title.textContent = "Lectura rápida";
+              const body = document.createElement("div");
+              body.className = "summary-body";
+              body.textContent = trimToSentences(lectura.body, 2) || lectura.body;
               block.appendChild(title);
               block.appendChild(body);
               summaryBlocksEl.appendChild(block);
@@ -2576,17 +2641,6 @@
         analysisPanelEl.innerHTML = "";
         if (analysisText) {
           analysisPanelEl.appendChild(buildUserMessageCard(lastUserText || ""));
-          const sections = extractAnalysisSections(analysisText);
-          if (sections) {
-            sections.forEach(section => {
-              analysisPanelEl.appendChild(buildAnalysisSection(section));
-            });
-          } else {
-            const plain = document.createElement("div");
-            plain.className = "analysis-section-body";
-            plain.textContent = analysisText;
-            analysisPanelEl.appendChild(plain);
-          }
         }
       }
       if (reasoningToggleEl) {
@@ -2838,7 +2892,9 @@
         copyButton.addEventListener("click", async (event) => {
           event.stopPropagation();
           try {
-            await navigator.clipboard.writeText(optionBodyText);
+            const optionTextEl = event.currentTarget.closest(".option-card")?.querySelector(".option-text");
+            if (!optionTextEl) return;
+            await navigator.clipboard.writeText(optionTextEl.textContent || "");
             copyFeedback.classList.remove("is-visible");
             void copyFeedback.offsetWidth;
             copyFeedback.classList.add("is-visible");
