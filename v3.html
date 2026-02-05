@@ -8,26 +8,23 @@
 
   <style>
     :root {
-      --bg: #000000;
-      --surface: #111111;
-      --surface-strong: #151515;
-      --border: rgba(255, 255, 255, 0.08);
-      --border-strong: rgba(255, 255, 255, 0.16);
-      --glass: rgba(0, 0, 0, 0.7);
+      --bg: #0B0F14;
+      --surface: #0F141C;
+      --surface-strong: #121826;
+      --border: #1F2937;
 
-      --text-primary: #EDEDED;
-      --text-secondary: #A1A1A1;
+      --text-primary: #E5E7EB;
+      --text-secondary: #9CA3AF;
 
-      --accent: #EDEDED;
+      --accent: #1fc6ff;
     }
 
     body {
       margin: 0;
-      font-family: -apple-system, "SF Pro Display", "Inter", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text-primary);
       min-height: 100vh;
-      line-height: 1.6;
     }
 
     * {
@@ -46,11 +43,6 @@
       align-items: center;
       padding: 18px 28px 4px;
       position: relative;
-      background: var(--glass);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      z-index: 4;
     }
 
     .app-title {
@@ -74,15 +66,13 @@
       right: 28px;
       top: 56px;
       margin-top: 8px;
-      background: var(--glass);
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 6px;
       display: none;
       z-index: 5;
       box-shadow: none;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
     }
 
     .menu.open {
@@ -155,7 +145,7 @@
       resize: none;
       line-height: 1.7;
       min-height: 220px;
-      background: var(--surface-strong);
+      background: var(--bg);
       color: var(--text-primary);
       transition: border-color 0.2s ease;
     }
@@ -168,18 +158,18 @@
       padding: 14px 18px;
       border-radius: 12px;
       border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--surface-strong);
       color: var(--text-primary);
       cursor: pointer;
       font-size: 15px;
       font-weight: 600;
-      transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+      transition: background 0.2s ease, border-color 0.2s ease;
       box-shadow: none;
     }
 
     button:hover:not(:disabled) {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: var(--border-strong);
+      background: #161D2D;
+      border-color: var(--text-secondary);
       transform: none;
     }
 
@@ -202,7 +192,7 @@
 
     .column-input {
       width: 100%;
-      max-width: 768px;
+      max-width: 720px;
       overflow: hidden;
       max-height: 1000px;
       transition:
@@ -237,7 +227,7 @@
     }
 
     .response-shell {
-      width: min(768px, 100%);
+      width: min(720px, 100%);
       display: flex;
       flex-direction: column;
       gap: 22px;
@@ -319,8 +309,9 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
-      background: var(--surface-strong);
+      background: var(--surface);
       border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
       border-radius: 16px;
       opacity: 0;
       transform: translateY(8px);
@@ -345,7 +336,7 @@
       padding: 4px 12px;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: var(--surface);
+      background: var(--bg);
       color: var(--text-secondary);
       font-size: 11px;
       letter-spacing: 0.02em;
@@ -371,7 +362,7 @@
     }
 
     .reasoning-toggle {
-      background: rgba(255, 255, 255, 0.04);
+      background: var(--bg);
       border: 1px solid var(--border);
       color: var(--text-secondary);
       font-size: 13px;
@@ -389,8 +380,8 @@
     }
 
     .reasoning-toggle:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: var(--border-strong);
+      background: var(--surface);
+      border-color: var(--text-secondary);
       transform: none;
       color: var(--text-primary);
     }
@@ -446,7 +437,7 @@
     }
 
     .analysis-copy-button:hover {
-      border-color: var(--border-strong);
+      border-color: var(--text-secondary);
       color: var(--text-primary);
     }
 
@@ -493,7 +484,7 @@
 
     .dashboard-grid .option-card {
       width: 100%;
-      max-width: 768px;
+      max-width: 880px;
     }
 
     .dashboard-grid .option-card.is-recommended {
@@ -517,7 +508,7 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
-      background: var(--surface);
+      background: #0E131B;
     }
 
     .dashboard-title {
@@ -570,12 +561,12 @@
     }
 
     .dot.is-active {
-      background: var(--text-secondary);
+      background: #6B7280;
       opacity: 1;
     }
 
     .dot.is-active.is-high {
-      background: var(--text-primary);
+      background: var(--accent);
     }
 
     .metric-level {
@@ -635,13 +626,12 @@
     }
 
     .option-card:hover {
-      border-color: var(--border-strong);
-      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--text-secondary);
     }
 
     .option-card.is-sim-best {
-      border-color: var(--border-strong);
-      box-shadow: none;
+      border-color: var(--accent);
+      box-shadow: 0 10px 22px rgba(31, 198, 255, 0.18);
     }
 
     .option-sim-score {
@@ -663,9 +653,9 @@
     }
 
     .option-card.is-recommended {
-      border-color: var(--border-strong);
-      background: var(--surface);
-      border-left: 2px solid var(--border-strong);
+      border-color: var(--accent);
+      background: var(--surface-strong);
+      border-left: 3px solid var(--accent);
       padding: 18px 20px;
     }
 
@@ -715,7 +705,7 @@
       padding: 4px 10px;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: var(--surface-strong);
+      background: var(--bg);
       color: var(--text-secondary);
       font-size: 11px;
       font-weight: 600;
@@ -724,8 +714,8 @@
     }
 
     .option-card.is-recommended .option-tag {
-      border-color: var(--border-strong);
-      color: var(--text-primary);
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     .option-card:not(.is-recommended) {
@@ -786,8 +776,8 @@
 
     .copy-button:hover,
     .copy-button:focus-visible {
-      border-color: var(--border-strong);
-      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--border);
+      background: var(--surface);
       outline: none;
     }
 
@@ -943,7 +933,7 @@
       padding: 6px 12px;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: var(--surface-strong);
+      background: var(--bg);
       color: var(--text-secondary);
       font-size: 11px;
       font-weight: 600;
@@ -952,16 +942,16 @@
     }
 
     .pill-toggle.is-active {
-      border-color: var(--border-strong);
-      color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(29, 185, 84, 0.08);
     }
 
     .sim-tag {
       padding: 4px 10px;
       border-radius: 999px;
-      border: 1px solid var(--border-strong);
-      color: var(--text-primary);
+      border: 1px solid var(--accent);
+      color: var(--accent);
       font-size: 10px;
       font-weight: 600;
       text-transform: uppercase;
@@ -989,12 +979,12 @@
 
     .metric-bar-fill[data-level="4"],
     .metric-bar-fill[data-level="5"] {
-      background: var(--text-primary);
+      background: var(--accent);
     }
 
     .metric-indicator input[type="range"] {
       width: 120px;
-      accent-color: var(--text-primary);
+      accent-color: var(--accent);
     }
 
     .metric-explain {
@@ -1057,7 +1047,7 @@
     }
 
     .compare-item input {
-      accent-color: var(--text-primary);
+      accent-color: var(--accent);
     }
 
     .compare-card {
@@ -1103,7 +1093,7 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 12px;
-      background: var(--surface-strong);
+      background: var(--bg);
     }
 
     .exec-title {
@@ -1133,7 +1123,7 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(11, 15, 20, 0.72);
       display: none;
       align-items: center;
       justify-content: center;
@@ -1146,7 +1136,7 @@
     }
 
     .modal {
-      background: var(--glass);
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 18px;
@@ -1154,8 +1144,6 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
     }
 
     .modal-header {
@@ -1167,7 +1155,7 @@
     .modal textarea {
       width: 100%;
       min-height: 220px;
-      background: var(--surface-strong);
+      background: var(--bg);
       color: var(--text-primary);
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -1196,7 +1184,7 @@
       border: 1px solid var(--border);
       font-size: 12px;
       color: var(--text-secondary);
-      background: var(--surface-strong);
+      background: var(--bg);
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -1229,11 +1217,11 @@
       max-width: 240px;
       padding: 8px 10px;
       border-radius: 10px;
-      background: var(--surface);
+      background: var(--surface-strong);
       color: var(--text-primary);
       font-size: 11px;
       line-height: 1.4;
-      box-shadow: none;
+      box-shadow: 0 10px 24px rgba(15, 20, 28, 0.55);
       opacity: 0;
       transform: translateY(4px);
       pointer-events: none;
@@ -1248,7 +1236,7 @@
       bottom: calc(100% + 4px);
       border-width: 6px 6px 0 6px;
       border-style: solid;
-      border-color: var(--surface) transparent transparent transparent;
+      border-color: var(--surface-strong) transparent transparent transparent;
       opacity: 0;
       transform: translateY(4px);
       transition: opacity 0.2s ease, transform 0.2s ease;
@@ -1265,7 +1253,7 @@
     }
 
     .option-card.is-recommended {
-      box-shadow: none;
+      box-shadow: 0 10px 24px rgba(29, 185, 84, 0.14);
     }
 
     .option-card.option-animate {
@@ -1287,7 +1275,7 @@
 
     @media (min-width: 1024px) {
       .response-shell {
-        width: min(768px, 100%);
+        width: min(1200px, 100%);
       }
 
       .command-center {
